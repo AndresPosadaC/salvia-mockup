@@ -1,3 +1,6 @@
+let sumaCorrectaReporte = 0;
+let sumaCorrectaLogin = 0;
+
 // ==========================================
 // 1. RUTEO PÚBLICO
 // ==========================================
@@ -43,10 +46,11 @@ function cerrarTeclado() {
 function enviarReporte(e) {
     e.preventDefault();
     
-    // Validar Captcha del Registro Público
+    // Validar Captcha del Reporte
     const captchaValor = document.getElementById('reporte-captcha').value;
-    if (captchaValor !== '12') {
-        alert("Suma de verificación incorrecta. 5 + 7 es 12. Intente de nuevo.");
+    if (captchaValor !== sumaCorrectaReporte.toString()) {
+        alert("Suma de verificación incorrecta. Intente de nuevo.");
+        generarCaptchas(); // Regenera ambas sumas
         return;
     }
 
@@ -108,9 +112,12 @@ function cargarCacheAlInicio() {
 // ==========================================
 function ingresarDashboard(e) {
     e.preventDefault();
+    
+    // Validar Captcha del Login
     const captchaValor = document.getElementById('login-captcha').value;
-    if (captchaValor !== '20') {
+    if (captchaValor !== sumaCorrectaLogin.toString()) {
         alert("Suma de seguridad incorrecta. Intente de nuevo.");
+        generarCaptchas(); // Regenera ambas sumas
         return;
     }
     cerrarTeclado();
@@ -131,21 +138,35 @@ function cerrarSesion() {
 // ==========================================
 function switchDashView(viewId) {
     const views = ['dashboard', 'seguimiento', 'tamizaje', 'masp', 'lgbtiq'];
+    
+    // Ocultar todas las vistas y quitar el estilo activo del menú
     views.forEach(v => {
         document.getElementById(`view-${v}`).classList.add('hidden');
         document.getElementById(`nav-${v}`).classList.remove('sidebar-active');
     });
+    
+    // Mostrar la vista seleccionada y marcar el menú activo
     document.getElementById(`view-${viewId}`).classList.remove('hidden');
     document.getElementById(`nav-${viewId}`).classList.add('sidebar-active');
 
-    const titles = {
-        'dashboard': 'Panel de Control Estratégico',
-        'seguimiento': 'Monitoreo de Rutas y Barreras',
-        'tamizaje': 'Valoración Técnica de Riesgo de Feminicidio',
-        'masp': 'Mockup Aplicativo MASP',
-        'lgbtiq': 'Enfoque Diferencial de Género'
+    // Mapeo: Relacionamos cada vista con su título y su llave de historia de usuario
+    const viewConfig = {
+        'dashboard':   { title: 'Panel de Control Estratégico', storyKey: 'panel_control' },
+        'seguimiento': { title: 'Monitoreo de Rutas y Barreras', storyKey: 'seguimiento_casos' },
+        'tamizaje':    { title: 'Valoración Técnica de Riesgo de Feminicidio', storyKey: 'tamizaje_riesgo' },
+        'masp':        { title: 'Mockup Aplicativo MASP', storyKey: 'modulo_masp' },
+        'lgbtiq':      { title: 'Enfoque Diferencial de Género', storyKey: 'modulo_lgbtiq' }
     };
-    document.getElementById('view-title').innerText = titles[viewId];
+
+    const config = viewConfig[viewId];
+    
+    // Magia pura: Inyectamos el título y el botón dinámico con la llave correcta
+    document.getElementById('view-title').innerHTML = `
+        ${config.title}
+        <button onclick="abrirModalHistoria('${config.storyKey}')" class="ml-4 text-gray-400 hover:text-[#FCCC3C] transition-colors align-middle" title="Ver Historia de Usuario">
+            <i class="fa-solid fa-circle-info text-2xl drop-shadow-sm"></i>
+        </button>
+    `;
 }
 
 // ==========================================
@@ -188,9 +209,108 @@ function submitFeedback() {
 }
 
 // ==========================================
+// 8. MENÚ HAMBURGUESA MÓVIL
+// ==========================================
+function toggleMenuMovil() {
+    const menu = document.getElementById('menu-movil');
+    // La clase 'hidden' de Tailwind oculta el elemento. Toggle la quita o la pone.
+    menu.classList.toggle('hidden');
+}
+
+// ==========================================
+// 9. GENERADOR DE CAPTCHAS DINÁMICOS
+// ==========================================
+function generarCaptchas() {
+    // --- 1. CAPTCHA PARA EL REPORTE CIUDADANO ---
+    const num1R = Math.floor(Math.random() * 10) + 1;
+    const num2R = Math.floor(Math.random() * 10) + 1;
+    sumaCorrectaReporte = num1R + num2R;
+    
+    const textoReporte = document.getElementById('captcha-text'); // El original
+    if (textoReporte) textoReporte.innerText = `Verificación: ${num1R} + ${num2R} =`;
+    const inputReporte = document.getElementById('reporte-captcha');
+    if (inputReporte) inputReporte.value = '';
+
+    // --- 2. CAPTCHA PARA EL INGRESO DE FUNCIONARIOS ---
+    const num1L = Math.floor(Math.random() * 10) + 1;
+    const num2L = Math.floor(Math.random() * 10) + 1;
+    sumaCorrectaLogin = num1L + num2L;
+    
+    const textoLogin = document.getElementById('login-captcha-text'); // El nuevo
+    if (textoLogin) textoLogin.innerText = `Seguridad: ${num1L} + ${num2L} =`;
+    const inputLogin = document.getElementById('login-captcha');
+    if (inputLogin) inputLogin.value = '';
+}
+
+// ==========================================
+// 10. GESTOR DE HISTORIAS DE USUARIO (MODAL)
+// ==========================================
+
+// Aquí guardamos el "diccionario" de las historias
+// Aquí guardamos el "diccionario" de las historias
+const userStories = {
+    // --- PÚBLICAS ---
+    'reporte': {
+        title: 'Registro de Atención Inicial',
+        role: 'Ciudadana / Víctima',
+        content: '"Como ciudadana en situación de riesgo, quiero poder registrar mis datos demográficos básicos y una descripción de los hechos en un formulario seguro, para que el sistema active una alerta temprana y la Línea 155 pueda contactarme."'
+    },
+    'login': {
+        title: 'Acceso de Funcionarios',
+        role: 'Operador / Funcionario de Red',
+        content: '"Como operador de la Línea 155, necesito un portal de acceso seguro que valide mi identidad, para poder ingresar al sistema y visualizar los casos reportados por las ciudadanas manteniendo la confidencialidad."'
+    },
+    // --- DASHBOARD PRIVADO ---
+    'panel_control': {
+        title: 'Panel de Control Estratégico',
+        role: 'Supervisor / Director',
+        content: '"Como supervisor, necesito visualizar métricas en tiempo real sobre los casos reportados, niveles de riesgo y tiempos de respuesta, para tomar decisiones informadas y asignar recursos eficientemente en la red de atención."'
+    },
+    'seguimiento_casos': {
+        title: 'Monitoreo de Rutas',
+        role: 'Operador 155 / Orientador',
+        content: '"Como operador, quiero ver una bandeja de entrada con los casos recién reportados, ordenados por urgencia y semaforizados, para poder iniciar el contacto de manera prioritaria y activar la ruta institucional."'
+    },
+    'tamizaje_riesgo': {
+        title: 'Valoración Técnica de Riesgo',
+        role: 'Profesional Psicosocial / Comisaría',
+        content: '"Como profesional en la ruta, necesito aplicar un cuestionario estandarizado que calcule automáticamente el riesgo de feminicidio, para clasificar el nivel de alerta (Extremo, Moderado, Bajo) y justificar medidas de protección."'
+    },
+    'modulo_masp': {
+        title: 'Módulo MASP',
+        role: 'Mujeres en Actividades Sexuales Pagas',
+        content: '"Como usuaria del ecosistema MASP, necesito contar con un botón de pánico y un canal de reporte discreto que me permita alertar a las autoridades si me encuentro en una situación de violencia en mi entorno laboral."'
+    },
+    'modulo_lgbtiq': {
+        title: 'Enfoque Diferencial de Género',
+        role: 'Analista de Casos',
+        content: '"Como analista, necesito visualizar indicadores y variables específicas de identidad de género y orientación sexual, para garantizar que la atención cumpla con el enfoque diferencial y no revictimice a la población diversa."'
+    }
+};
+
+function abrirModalHistoria(storyKey) {
+    const story = userStories[storyKey];
+    if (!story) return; // Si no existe la historia, no hace nada
+    
+    // Inyectar los textos en el HTML del modal
+    document.getElementById('story-title').innerHTML = `<i class="fa-solid fa-book-open mr-2"></i> ${story.title}`;
+    document.getElementById('story-role').innerText = `Rol: ${story.role}`;
+    document.getElementById('story-content').innerText = story.content;
+    
+    // Mostrar el modal
+    document.getElementById('story-modal').classList.remove('hidden');
+}
+
+function cerrarModalHistoria() {
+    // Ocultar el modal
+    document.getElementById('story-modal').classList.add('hidden');
+}
+
+// ==========================================
 // INICIALIZADOR GENERAL DE LA APLICACIÓN
 // ==========================================
 document.addEventListener('DOMContentLoaded', () => {
     navPublic('home-view');
-    cargarCacheAlInicio(); // Ejecuta la lectura de caché apenas abre la página
+    cargarCacheAlInicio(); 
+    generarCaptchas(); // <-- Ahora en plural
 });

@@ -41,18 +41,36 @@
 
     <div id="public-app" class="flex flex-col h-full w-full overflow-y-auto bg-salvia-bg">
         
-        <div class="bg-[#3366CC] text-white text-sm shrink-0">
-            <div class="container mx-auto px-4 py-2 flex justify-between items-center"> 
-                <img src="./assets/img/header_govco.png" alt="GOV" class="h-8 md:h-10 object-contain mr-2">
-                <h1>MOCKUP</h1>
-                <div class="hidden md:flex space-x-6 text-xs font-semibold">
-                    <a href="#" class="hover:underline">Transparencia</a>
-                    <a href="#" class="hover:underline">Atención al ciudadano</a>
-                    <a href="#" class="hover:underline">Participa</a>
-                </div> 
+        <div class="bg-[#3366CC] text-white sticky top-0 z-50">
+            <div class="container mx-auto px-4 py-2 flex justify-between items-center">
+                
+                <div class="flex items-center">
+                    <img src="./assets/img/header_govco.png" alt="GOV.CO" class="h-6 md:h-8 object-contain">
+                </div>
+                <div>
+                    <img src="./assets/img/kreivo_icon.png" alt="KREIVO" class="h-12 md:h-20 object-contain mr-2">
+                </div>
+                <nav class="hidden md:flex space-x-6 text-sm font-medium">
+                    <a href="#" class="hover:text-gray-200 transition-colors">Transparencia</a>
+                    <a href="#" class="hover:text-gray-200 transition-colors">Atención al ciudadano</a>
+                    <a href="#" class="hover:text-gray-200 transition-colors">Participa</a>
+                </nav>
+                
+                <button onclick="toggleMenuMovil()" class="md:hidden text-white hover:text-gray-200 focus:outline-none p-1">
+                    <i class="fa-solid fa-bars text-xl"></i>
+                </button>
+
+            </div>
+            
+            <div id="menu-movil" class="hidden md:hidden bg-blue-800 border-t border-blue-700">
+                <nav class="flex flex-col px-4 py-3 space-y-3 text-sm font-medium">
+                    <a href="#" class="block hover:underline py-1">Transparencia</a>
+                    <a href="#" class="block hover:underline py-1">Atención al ciudadano</a>
+                    <a href="#" class="block hover:underline py-1">Participa</a>
+                </nav>
             </div>
         </div>
-
+        
         <header class="bg-[#CF3671] shadow-md border-b-4 border-salvia-purple sticky top-0 z-40 shrink-0">
             <div class="container mx-auto px-4 py-4 flex justify-between items-center">
                 <div class="flex items-center space-x-3">
@@ -93,6 +111,7 @@
                         <div class="bg-white rounded-2xl shadow-2xl p-8 border-t-8 border-[#FCCC3C] transform transition hover:-translate-y-2 flex flex-col items-center">
                             <div class="bg-[#FCCC3C]/20 text-[#FCCC3C] p-4 rounded-full mb-6"><i class="fa-solid fa-shield-heart text-3xl"></i></div>
                             <h2 class="text-2xl font-bold mb-3 text-gray-800">Reportar un caso</h2>
+                            <button onclick="abrirModalHistoria('reporte')" class="ml-3 text-gray-300 hover:text-[#380E44] transition-colors" title="Ver Historia de Usuario"><i class="fa-solid fa-circle-info text-xl"></i></button>
                             <p class="text-gray-600 mb-8">Si eres víctima de violencia de género y estás en peligro comunícate con la Línea 155</p>
                             <button onclick="navPublic('reporte-view')" class="w-full bg-[#FCCC3C] text-gray-900 font-bold py-4 px-6 rounded-lg text-lg hover:brightness-95 transition-all shadow-md">Iniciar Reporte</button>
                         </div>
@@ -100,6 +119,7 @@
                         <div class="bg-white rounded-2xl shadow-2xl p-8 border-t-8 border-[#380E44] transform transition hover:-translate-y-2 flex flex-col items-center">
                             <div class="bg-[#380E44]/10 text-[#380E44] p-4 rounded-full mb-6"><i class="fa-solid fa-user-lock text-3xl"></i></div>
                             <h2 class="text-2xl font-bold mb-3 text-gray-800">Consultar / Gestionar</h2>
+                            <button onclick="abrirModalHistoria('login')" class="ml-3 text-gray-300 hover:text-[#380E44] transition-colors" title="Ver Historia de Usuario"><i class="fa-solid fa-circle-info text-xl"></i></button>
                             <p class="text-gray-600 mb-8">Acceso para ciudadanas y funcionarios de la red de atención.</p>
                             <button onclick="navPublic('login-view')" class="w-full bg-[#380E44] text-white font-bold py-4 px-6 rounded-lg text-lg hover:bg-[#2a0a33] transition-all shadow-md">Ingresar al Sistema</button>
                         </div>
@@ -308,7 +328,8 @@
                             </div>
 
                             <div class="flex items-center space-x-4 pt-6 mt-6 border-t border-gray-200">
-                                <span class="text-gray-600 font-mono text-lg italic select-none">Verificación: 5 + 7 =</span>
+                                
+                                <span id="captcha-text" class="text-gray-600 font-mono text-lg italic select-none">Verificación: </span>
                                 <input type="text" id="reporte-captcha" required class="numpad-trigger w-24 border border-gray-300 rounded p-2 focus:ring-2 focus:ring-[#380E44] text-center cursor-pointer bg-gray-50" placeholder="?" inputmode="numeric" readonly>
                                 <span class="text-xs text-gray-500">Haga clic en el cuadro para responder</span>
                             </div>
@@ -342,9 +363,12 @@
                             <input type="password" id="login-pass" required class="w-full border-b-2 border-gray-300 px-2 py-1 focus:outline-none focus:border-salvia-purple transition" placeholder="••••••••">
                         </div>
                         
-                        <div class="flex items-center space-x-4 pt-2">
-                            <span class="text-gray-600 font-mono text-lg italic select-none">12 + 8 =</span>
-                            <input type="text" id="login-captcha" required class="numpad-trigger w-20 border-b-2 border-gray-300 px-2 py-1 focus:outline-none focus:border-salvia-purple text-center cursor-pointer" placeholder="?" inputmode="numeric" readonly>
+                        <div class="flex items-center space-x-4 pt-6 mt-6 border-t border-gray-200">
+                                <span id="login-captcha-text" class="text-gray-600 font-mono text-lg italic select-none">Verificación: </span>
+                                
+                                <input type="text" id="login-captcha" required class="numpad-trigger w-24 border border-gray-300 rounded p-2 focus:ring-2 focus:ring-[#380E44] text-center cursor-pointer bg-gray-50" placeholder="?" inputmode="numeric" readonly>
+                                
+                                <span class="text-xs text-gray-500">Haga clic en el cuadro para responder</span>
                         </div>
 
                         <div class="flex items-center justify-between pt-4">
@@ -361,7 +385,7 @@
 
         <footer class="bg-[#3366CC] text-white text-sm shrink-0 border-t border-blue-800">
             <div class="container mx-auto px-4 py-3 flex justify-between items-center"> 
-                <img src="./assets/img/marca_colombia-p-500.png" alt="Logo Marca_Colombia" class="h-18 md:h-24 object-contain">
+                <img src="./assets/img/marca_colombia-p-500.png" alt="Logo Marca_Colombia" class="h-10 md:h-18 object-contain">
                 <img src="./assets/img/header_govco.png" alt="Logo GOV.CO" class="h-10 md:h-18 object-contain">
             </div>
         </footer>
@@ -631,6 +655,29 @@
                 </div>
             </div>
         </main>
+    </div>
+    <div id="story-modal" class="fixed inset-0 z-[100] hidden bg-gray-900/60 backdrop-blur-sm flex items-center justify-center p-4 transition-opacity">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full overflow-hidden transform transition-all">
+            <div class="bg-[#380E44] px-6 py-4 flex justify-between items-center">
+                <h3 id="story-title" class="text-white font-bold text-lg flex items-center">
+                    <i class="fa-solid fa-book-open mr-2"></i> Historia de Usuario
+                </h3>
+                <button onclick="cerrarModalHistoria()" class="text-white hover:text-gray-300 focus:outline-none">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+            <div class="p-6">
+                <div id="story-role" class="inline-block bg-purple-100 text-[#380E44] text-xs px-3 py-1 rounded-full font-bold mb-4 uppercase tracking-wide">
+                    Rol: 
+                </div>
+                <p id="story-content" class="text-gray-700 leading-relaxed text-base italic border-l-4 border-[#FCCC3C] pl-4"></p>
+            </div>
+            <div class="bg-gray-50 px-6 py-4 border-t border-gray-100 text-right">
+                <button onclick="cerrarModalHistoria()" class="bg-[#380E44] text-white px-6 py-2 rounded-lg shadow hover:bg-purple-900 transition-colors text-sm font-bold">
+                    Entendido
+                </button>
+            </div>
+        </div>
     </div>
 <script src="./salvia_app.js"></script>
 </body>
