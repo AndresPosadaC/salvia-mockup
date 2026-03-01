@@ -1,5 +1,11 @@
+// ==========================================
+// VARIABLES GLOBALES
+// ==========================================
 let sumaCorrectaReporte = 0;
 let sumaCorrectaLogin = 0;
+let rolActual = 'tercero';
+let asistenteVozActivo = false;
+let inputActivo = null;
 
 // ==========================================
 // 1. RUTEO PÚBLICO
@@ -13,31 +19,31 @@ function navPublic(viewId) {
 }
 
 // ==========================================
-// 2. TECLADO VIRTUAL
+// 2. FORMULARIO DINÁMICO (NUEVO V2.0)
 // ==========================================
-let inputActivo = null;
-const teclado = document.getElementById('virtual-keypad');
+function prepararFormulario(rol) {
+    rolActual = rol;
+    const titulo = document.getElementById('form-dynamic-title');
+    const instruccion = document.getElementById('form-dynamic-instruction');
+    const btnSubmit = document.querySelector('#form-reporte button[type="submit"]');
 
-document.querySelectorAll('.numpad-trigger').forEach(input => {
-    input.addEventListener('click', function() {
-        inputActivo = this;
-        document.querySelectorAll('.numpad-trigger').forEach(t => t.classList.remove('ring-2', 'ring-salvia-purple'));
-        this.classList.add('ring-2', 'ring-salvia-purple');
-        teclado.classList.add('show');
-    });
-});
-
-document.querySelectorAll('.keypad-btn').forEach(btn => {
-    btn.addEventListener('click', function() { 
-        if(inputActivo) inputActivo.value += this.innerText; 
-    });
-});
-
-function borrarUltimo() { if(inputActivo) inputActivo.value = inputActivo.value.slice(0, -1); }
-function limpiarInput() { if(inputActivo) inputActivo.value = ''; }
-function cerrarTeclado() { 
-    teclado.classList.remove('show'); 
-    if(inputActivo) inputActivo.classList.remove('ring-2', 'ring-salvia-purple'); 
+    if (rol === 'tercero') {
+        titulo.innerText = "Reporte por Terceros (Familiar / Conocido)";
+        instruccion.innerHTML = "<strong>Orientación:</strong> Los datos a continuación deben ser <strong>exclusivamente los de la víctima</strong> para que podamos contactarla. El campo de teléfono es el único obligatorio.";
+        btnSubmit.innerText = "Enviar Reporte a la Línea 155";
+    } else if (rol === 'victima') {
+        titulo.innerText = "Mi Registro Personal";
+        instruccion.innerHTML = "<strong>Orientación:</strong> Actualice su información personal. El sistema resguardará sus datos con máxima seguridad.";
+        btnSubmit.innerText = "Guardar mis datos";
+    } else if (rol === 'funcionario') {
+        titulo.innerText = "Registro de Caso Entrante (Operador)";
+        instruccion.innerHTML = "<strong>Orientación Operador:</strong> Diligencie los datos proporcionados por la ciudadana en la llamada. Verifique el número de contacto.";
+        btnSubmit.innerText = "Radicar Caso en el Sistema";
+    }
+    
+    generarCaptchas();
+    navPublic('reporte-view');
+    if(asistenteVozActivo) {leerTexto(titulo.innerText + ". " + instruccion.innerText.replace('Orientación:', 'Orientación. '));}
 }
 
 // ==========================================
@@ -46,21 +52,27 @@ function cerrarTeclado() {
 function enviarReporte(e) {
     e.preventDefault();
     
-    // Validar Captcha del Reporte
-    const captchaValor = document.getElementById('reporte-captcha').value;
-    if (captchaValor !== sumaCorrectaReporte.toString()) {
-        alert("Suma de verificación incorrecta. Intente de nuevo.");
-        generarCaptchas(); // Regenera ambas sumas
+    const tel = document.getElementById('reporte-tel').value;
+    // VALIDACIÓN ESTRICTA DE TELÉFONO
+    if (!tel || tel.trim() === '') {
+        alert("El número de teléfono es obligatorio para poder contactarla.");
+        if (asistenteVozActivo) leerTexto("Error. El campo de teléfono es obligatorio.");
         return;
     }
 
-    const tel = document.getElementById('reporte-tel').value;
-    
+    const captchaValor = document.getElementById('reporte-captcha').value;
+    if (captchaValor !== sumaCorrectaReporte.toString()) {
+        alert("Suma de verificación incorrecta. Intente de nuevo.");
+        generarCaptchas();
+        return;
+    }
+
     let casosEnCache = JSON.parse(localStorage.getItem('casosSalvia')) || [];
     const nuevoCaso = {
-        id: 'VBG-2026-' + Math.floor(1000 + Math.random() * 9000), 
+        id: 'VBG-2026-' + Math.floor(1000 + Math.random() * 9000),
         tel: tel,
-        fecha: 'Hace un momento'
+        fecha: 'Hace un momento',
+        rol: rolActual 
     };
     
     casosEnCache.push(nuevoCaso);
@@ -69,13 +81,12 @@ function enviarReporte(e) {
     inyectarFilaTabla(nuevoCaso);
     actualizarMetricas();
 
-    alert("Reporte guardado exitosamente. Ahora ingrese como funcionario para ver el caso enrutado.");
+    alert("Registro guardado exitosamente.");
     e.target.reset();
     cerrarTeclado();
-    navPublic('home-view'); // Mejor devolverlo al Home después de reportar
+    navPublic('home-view');
 }
 
-// Funciones auxiliares para pintar los datos del Caché
 function inyectarFilaTabla(caso) {
     const tbody = document.getElementById('tabla-seguimiento');
     if(!tbody) return;
@@ -83,9 +94,9 @@ function inyectarFilaTabla(caso) {
     const newRow = `<tr>
         <td class="px-6 py-4 font-mono text-xs">${caso.id}</td>
         <td class="px-6 py-4 font-medium">Ciudadana (Tel: ${caso.tel})</td>
-        <td class="px-6 py-4"><span class="px-2 py-1 rounded bg-purple-100 text-purple-700 text-xs font-bold">Primer Contacto</span></td>
+        <td class="px-6 py-4"><span class="px-2 py-1 rounded bg-purple-100 text-purple-700 text-xs font-bold">${caso.rol === 'funcionario' ? 'Radicado OP' : 'Primer Contacto'}</span></td>
         <td class="px-6 py-4">${caso.fecha}</td>
-        <td class="px-6 py-4"><button class="bg-salvia-purple text-white px-3 py-1 rounded shadow hover:bg-purple-700 text-xs font-bold">INICIAR RUTA</button></td>
+        <td class="px-6 py-4"><button class="bg-[#380E44] text-white px-3 py-1 rounded shadow hover:bg-purple-900 text-xs font-bold">INICIAR RUTA</button></td>
     </tr>`;
     tbody.insertAdjacentHTML('afterbegin', newRow);
 }
@@ -93,18 +104,29 @@ function inyectarFilaTabla(caso) {
 function actualizarMetricas() {
     let casosEnCache = JSON.parse(localStorage.getItem('casosSalvia')) || [];
     const metricElement = document.getElementById('metric-nuevo');
-    if(metricElement) {
-        // Sumamos los casos quemados en el HTML (1240) + los nuevos que estén en caché
-        metricElement.innerText = (1240 + casosEnCache.length).toLocaleString();
-    }
+    if(metricElement) metricElement.innerText = (1240 + casosEnCache.length).toLocaleString();
 }
 
 function cargarCacheAlInicio() {
     let casosEnCache = JSON.parse(localStorage.getItem('casosSalvia')) || [];
-    casosEnCache.forEach(caso => {
-        inyectarFilaTabla(caso);
-    });
+    casosEnCache.forEach(caso => inyectarFilaTabla(caso));
     actualizarMetricas();
+}
+
+// FUNCIONES REPARADAS DEL DASHBOARD
+function toggleDesignControls() {
+    const panel = document.getElementById('design-controls');
+    if (panel.classList.contains('translate-x-full')) {
+        panel.classList.remove('translate-x-full');
+    } else {
+        panel.classList.add('translate-x-full');
+    }
+}
+
+function submitFeedback() {
+    alert("Comentario de diseño registrado en la bitácora.");
+    document.getElementById('feedback-text').value = '';
+    toggleDesignControls();
 }
 
 // ==========================================
@@ -112,19 +134,22 @@ function cargarCacheAlInicio() {
 // ==========================================
 function ingresarDashboard(e) {
     e.preventDefault();
-    
-    // Validar Captcha del Login
     const captchaValor = document.getElementById('login-captcha').value;
     if (captchaValor !== sumaCorrectaLogin.toString()) {
         alert("Suma de seguridad incorrecta. Intente de nuevo.");
-        generarCaptchas(); // Regenera ambas sumas
+        generarCaptchas();
         return;
     }
     cerrarTeclado();
+    // V2.0: Va a la vista intermedia en lugar de ir directo al dashboard
+    navPublic('intermedio-funcionario-view');
+    e.target.reset();
+}
+
+function ingresarDashboardFinal() {
     document.getElementById('public-app').classList.add('hidden-view');
     document.getElementById('dashboard-app').classList.remove('hidden-view');
     switchDashView('dashboard');
-    e.target.reset();
 }
 
 function cerrarSesion() {
@@ -134,22 +159,17 @@ function cerrarSesion() {
 }
 
 // ==========================================
-// 5. NAVEGACIÓN DEL DASHBOARD PRIVADO
+// 5. NAVEGACIÓN DEL DASHBOARD Y BOTONES INFO
 // ==========================================
 function switchDashView(viewId) {
     const views = ['dashboard', 'seguimiento', 'tamizaje', 'masp', 'lgbtiq'];
-    
-    // Ocultar todas las vistas y quitar el estilo activo del menú
     views.forEach(v => {
         document.getElementById(`view-${v}`).classList.add('hidden');
         document.getElementById(`nav-${v}`).classList.remove('sidebar-active');
     });
-    
-    // Mostrar la vista seleccionada y marcar el menú activo
     document.getElementById(`view-${viewId}`).classList.remove('hidden');
     document.getElementById(`nav-${viewId}`).classList.add('sidebar-active');
 
-    // Mapeo: Relacionamos cada vista con su título y su llave de historia de usuario
     const viewConfig = {
         'dashboard':   { title: 'Panel de Control Estratégico', storyKey: 'panel_control' },
         'seguimiento': { title: 'Monitoreo de Rutas y Barreras', storyKey: 'seguimiento_casos' },
@@ -159,8 +179,6 @@ function switchDashView(viewId) {
     };
 
     const config = viewConfig[viewId];
-    
-    // Magia pura: Inyectamos el título y el botón dinámico con la llave correcta
     document.getElementById('view-title').innerHTML = `
         ${config.title}
         <button onclick="abrirModalHistoria('${config.storyKey}')" class="ml-4 text-gray-400 hover:text-[#FCCC3C] transition-colors align-middle" title="Ver Historia de Usuario">
@@ -170,15 +188,153 @@ function switchDashView(viewId) {
 }
 
 // ==========================================
-// 6. MOTOR DE RIESGO (TAMIZAJE)
+// 6. TECLADO VIRTUAL
 // ==========================================
+const teclado = document.getElementById('virtual-keypad');
+document.addEventListener('click', function(e) {
+    if(e.target.classList.contains('numpad-trigger')) {
+        inputActivo = e.target;
+        document.querySelectorAll('.numpad-trigger').forEach(t => t.classList.remove('ring-2', 'ring-[#380E44]'));
+        inputActivo.classList.add('ring-2', 'ring-[#380E44]');
+        teclado.classList.add('show');
+    }
+});
+document.querySelectorAll('.keypad-btn').forEach(btn => {
+    btn.addEventListener('click', function() { if(inputActivo) inputActivo.value += this.innerText; });
+});
+function borrarUltimo() { if(inputActivo) inputActivo.value = inputActivo.value.slice(0, -1); }
+function limpiarInput() { if(inputActivo) inputActivo.value = ''; }
+function cerrarTeclado() { 
+    if(teclado) teclado.classList.remove('show'); 
+    if(inputActivo) inputActivo.classList.remove('ring-2', 'ring-[#380E44]'); 
+}
+
+// ==========================================
+// 7. GENERADOR DE CAPTCHAS DINÁMICOS
+// ==========================================
+function generarCaptchas() {
+    const num1R = Math.floor(Math.random() * 10) + 1;
+    const num2R = Math.floor(Math.random() * 10) + 1;
+    sumaCorrectaReporte = num1R + num2R;
+    const textoReporte = document.getElementById('captcha-text');
+    if (textoReporte) textoReporte.innerText = `Verificación: ${num1R} + ${num2R} =`;
+    const inputReporte = document.getElementById('reporte-captcha');
+    if (inputReporte) inputReporte.value = '';
+
+    const num1L = Math.floor(Math.random() * 10) + 1;
+    const num2L = Math.floor(Math.random() * 10) + 1;
+    sumaCorrectaLogin = num1L + num2L;
+    const textoLogin = document.getElementById('login-captcha-text');
+    if (textoLogin) textoLogin.innerText = `Seguridad: ${num1L} + ${num2L} =`;
+    const inputLogin = document.getElementById('login-captcha');
+    if (inputLogin) inputLogin.value = '';
+}
+
+
+// ==========================================
+// 8. ACCESIBILIDAD AVANZADA (AUDIO)
+// ==========================================
+function toggleAsistenteVoz() {
+    asistenteVozActivo = !asistenteVozActivo;
+    const btn = document.getElementById('btn-audio');
+    if (asistenteVozActivo) {
+        btn.classList.add('bg-green-500');
+        btn.classList.remove('bg-white/20');
+        leerTexto("Asistente de voz activado. Navegue por la página usando la tecla Tabulador.");
+    } else {
+        btn.classList.remove('bg-green-500');
+        btn.classList.add('bg-white/20');
+        window.speechSynthesis.cancel();
+    }
+}
+
+function leerTexto(texto) {
+    if (!asistenteVozActivo) return;
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(texto);
+    utterance.lang = 'es-CO'; 
+    utterance.rate = 1.05; // Un poco más natural
+    window.speechSynthesis.speak(utterance);
+}
+
+// Leer cuando el usuario enfoca un campo (Tabulador)
+document.addEventListener('focusin', function(e) {
+    if (!asistenteVozActivo) return;
+    const elemento = e.target;
+    
+    if (['INPUT', 'SELECT', 'TEXTAREA'].includes(elemento.tagName)) {
+        let textoALeer = "";
+        
+        // Buscar el label
+        const label = elemento.previousElementSibling;
+        if (label && label.tagName === 'LABEL') textoALeer += label.innerText + ". ";
+        
+        // Lógica especial para Selects
+        if (elemento.tagName === 'SELECT') {
+            const opcionActual = elemento.options[elemento.selectedIndex].text;
+            textoALeer += "Lista desplegable. Use las flechas arriba y abajo de su teclado para cambiar. Opción actual: " + opcionActual;
+        } 
+        // Lógica especial para Captchas (Lee los números reales)
+        else if (elemento.id === 'reporte-captcha') {
+            const sumaTexto = document.getElementById('captcha-text').innerText;
+            textoALeer = "Verificación de seguridad. Por favor escriba el resultado de: " + sumaTexto;
+        }
+        else if (elemento.id === 'login-captcha') {
+            const sumaTexto = document.getElementById('login-captcha-text').innerText;
+            textoALeer = "Seguridad. Escriba el resultado de: " + sumaTexto;
+        }
+        // Campos normales
+        else {
+            if (elemento.placeholder && elemento.placeholder !== '?') textoALeer += elemento.placeholder;
+        }
+        
+        leerTexto(textoALeer);
+    }
+});
+
+// Leer cuando el usuario cambia una opción en un Select con las flechas
+document.addEventListener('change', function(e) {
+    if (!asistenteVozActivo) return;
+    if (e.target.tagName === 'SELECT') {
+        const nuevaOpcion = e.target.options[e.target.selectedIndex].text;
+        leerTexto("Seleccionado: " + nuevaOpcion);
+    }
+});
+
+// ==========================================
+// 9. GESTOR DE HISTORIAS DE USUARIO (MODAL)
+// ==========================================
+const userStories = {
+    'reporte': { title: 'Registro de Atención Inicial', role: 'Ciudadana / Víctima', content: '"Como ciudadana en situación de riesgo, quiero poder registrar mis datos demográficos básicos y una descripción de los hechos en un formulario seguro, para que el sistema active una alerta temprana y la Línea 155 pueda contactarme."' },
+    'login': { title: 'Acceso de Funcionarios', role: 'Operador / Funcionario de Red', content: '"Como operador de la Línea 155, necesito un portal de acceso seguro que valide mi identidad, para poder ingresar al sistema y visualizar los casos reportados por las ciudadanas manteniendo la confidencialidad."' },
+    'panel_control': { title: 'Panel de Control Estratégico', role: 'Supervisor / Director', content: '"Como supervisor, necesito visualizar métricas en tiempo real sobre los casos reportados, niveles de riesgo y tiempos de respuesta, para tomar decisiones informadas y asignar recursos eficientemente en la red de atención."' },
+    'seguimiento_casos': { title: 'Monitoreo de Rutas', role: 'Operador 155 / Orientador', content: '"Como operador, quiero ver una bandeja de entrada con los casos recién reportados, ordenados por urgencia y semaforizados, para poder iniciar el contacto de manera prioritaria y activar la ruta institucional."' },
+    'tamizaje_riesgo': { title: 'Valoración Técnica de Riesgo', role: 'Profesional Psicosocial / Comisaría', content: '"Como profesional en la ruta, necesito aplicar un cuestionario estandarizado que calcule automáticamente el riesgo de feminicidio, para clasificar el nivel de alerta (Extremo, Moderado, Bajo) y justificar medidas de protección."' },
+    'modulo_masp': { title: 'Módulo MASP', role: 'Mujeres en Actividades Sexuales Pagas', content: '"Como usuaria del ecosistema MASP, necesito contar con un botón de pánico y un canal de reporte discreto que me permita alertar a las autoridades si me encuentro en una situación de violencia en mi entorno laboral."' },
+    'modulo_lgbtiq': { title: 'Enfoque Diferencial de Género', role: 'Analista de Casos', content: '"Como analista, necesito visualizar indicadores y variables específicas de identidad de género y orientación sexual, para garantizar que la atención cumpla con el enfoque diferencial y no revictimice a la población diversa."' }
+};
+
+function abrirModalHistoria(storyKey) {
+    const story = userStories[storyKey];
+    if (!story) return;
+    document.getElementById('story-title').innerHTML = `<i class="fa-solid fa-book-open mr-2"></i> ${story.title}`;
+    document.getElementById('story-role').innerText = `Rol: ${story.role}`;
+    document.getElementById('story-content').innerText = story.content;
+    document.getElementById('story-modal').classList.remove('hidden');
+}
+function cerrarModalHistoria() { document.getElementById('story-modal').classList.add('hidden'); }
+
+// ==========================================
+// 10. MENÚ MÓVIL Y MOTOR DE RIESGO
+// ==========================================
+function toggleMenuMovil() { document.getElementById('menu-movil').classList.toggle('hidden'); }
+
 document.querySelectorAll('.risk-calc').forEach(radio => {
     radio.addEventListener('change', () => {
         let totalScore = 0;
         document.querySelectorAll('.risk-calc:checked').forEach(c => totalScore += parseInt(c.value));
         const scoreDisplay = document.getElementById('risk-score');
         const badge = document.getElementById('risk-badge');
-        
         scoreDisplay.innerText = totalScore;
         if(totalScore >= 15) {
             scoreDisplay.className = "text-6xl font-black text-red-600 transition-colors";
@@ -197,120 +353,10 @@ document.querySelectorAll('.risk-calc').forEach(radio => {
 });
 
 // ==========================================
-// 7. PANEL DE COMENTARIOS LATERAL
-// ==========================================
-function toggleDesignControls() { document.getElementById('design-controls').classList.toggle('translate-x-full'); }
-function submitFeedback() {
-    const text = document.getElementById('feedback-text').value;
-    if(!text) return;
-    alert("Observación guardada. Esta interacción demostrará control al cliente.");
-    document.getElementById('feedback-text').value = '';
-    toggleDesignControls();
-}
-
-// ==========================================
-// 8. MENÚ HAMBURGUESA MÓVIL
-// ==========================================
-function toggleMenuMovil() {
-    const menu = document.getElementById('menu-movil');
-    // La clase 'hidden' de Tailwind oculta el elemento. Toggle la quita o la pone.
-    menu.classList.toggle('hidden');
-}
-
-// ==========================================
-// 9. GENERADOR DE CAPTCHAS DINÁMICOS
-// ==========================================
-function generarCaptchas() {
-    // --- 1. CAPTCHA PARA EL REPORTE CIUDADANO ---
-    const num1R = Math.floor(Math.random() * 10) + 1;
-    const num2R = Math.floor(Math.random() * 10) + 1;
-    sumaCorrectaReporte = num1R + num2R;
-    
-    const textoReporte = document.getElementById('captcha-text'); // El original
-    if (textoReporte) textoReporte.innerText = `Verificación: ${num1R} + ${num2R} =`;
-    const inputReporte = document.getElementById('reporte-captcha');
-    if (inputReporte) inputReporte.value = '';
-
-    // --- 2. CAPTCHA PARA EL INGRESO DE FUNCIONARIOS ---
-    const num1L = Math.floor(Math.random() * 10) + 1;
-    const num2L = Math.floor(Math.random() * 10) + 1;
-    sumaCorrectaLogin = num1L + num2L;
-    
-    const textoLogin = document.getElementById('login-captcha-text'); // El nuevo
-    if (textoLogin) textoLogin.innerText = `Seguridad: ${num1L} + ${num2L} =`;
-    const inputLogin = document.getElementById('login-captcha');
-    if (inputLogin) inputLogin.value = '';
-}
-
-// ==========================================
-// 10. GESTOR DE HISTORIAS DE USUARIO (MODAL)
-// ==========================================
-
-// Aquí guardamos el "diccionario" de las historias
-// Aquí guardamos el "diccionario" de las historias
-const userStories = {
-    // --- PÚBLICAS ---
-    'reporte': {
-        title: 'Registro de Atención Inicial',
-        role: 'Ciudadana / Víctima',
-        content: '"Como ciudadana en situación de riesgo, quiero poder registrar mis datos demográficos básicos y una descripción de los hechos en un formulario seguro, para que el sistema active una alerta temprana y la Línea 155 pueda contactarme."'
-    },
-    'login': {
-        title: 'Acceso de Funcionarios',
-        role: 'Operador / Funcionario de Red',
-        content: '"Como operador de la Línea 155, necesito un portal de acceso seguro que valide mi identidad, para poder ingresar al sistema y visualizar los casos reportados por las ciudadanas manteniendo la confidencialidad."'
-    },
-    // --- DASHBOARD PRIVADO ---
-    'panel_control': {
-        title: 'Panel de Control Estratégico',
-        role: 'Supervisor / Director',
-        content: '"Como supervisor, necesito visualizar métricas en tiempo real sobre los casos reportados, niveles de riesgo y tiempos de respuesta, para tomar decisiones informadas y asignar recursos eficientemente en la red de atención."'
-    },
-    'seguimiento_casos': {
-        title: 'Monitoreo de Rutas',
-        role: 'Operador 155 / Orientador',
-        content: '"Como operador, quiero ver una bandeja de entrada con los casos recién reportados, ordenados por urgencia y semaforizados, para poder iniciar el contacto de manera prioritaria y activar la ruta institucional."'
-    },
-    'tamizaje_riesgo': {
-        title: 'Valoración Técnica de Riesgo',
-        role: 'Profesional Psicosocial / Comisaría',
-        content: '"Como profesional en la ruta, necesito aplicar un cuestionario estandarizado que calcule automáticamente el riesgo de feminicidio, para clasificar el nivel de alerta (Extremo, Moderado, Bajo) y justificar medidas de protección."'
-    },
-    'modulo_masp': {
-        title: 'Módulo MASP',
-        role: 'Mujeres en Actividades Sexuales Pagas',
-        content: '"Como usuaria del ecosistema MASP, necesito contar con un botón de pánico y un canal de reporte discreto que me permita alertar a las autoridades si me encuentro en una situación de violencia en mi entorno laboral."'
-    },
-    'modulo_lgbtiq': {
-        title: 'Enfoque Diferencial de Género',
-        role: 'Analista de Casos',
-        content: '"Como analista, necesito visualizar indicadores y variables específicas de identidad de género y orientación sexual, para garantizar que la atención cumpla con el enfoque diferencial y no revictimice a la población diversa."'
-    }
-};
-
-function abrirModalHistoria(storyKey) {
-    const story = userStories[storyKey];
-    if (!story) return; // Si no existe la historia, no hace nada
-    
-    // Inyectar los textos en el HTML del modal
-    document.getElementById('story-title').innerHTML = `<i class="fa-solid fa-book-open mr-2"></i> ${story.title}`;
-    document.getElementById('story-role').innerText = `Rol: ${story.role}`;
-    document.getElementById('story-content').innerText = story.content;
-    
-    // Mostrar el modal
-    document.getElementById('story-modal').classList.remove('hidden');
-}
-
-function cerrarModalHistoria() {
-    // Ocultar el modal
-    document.getElementById('story-modal').classList.add('hidden');
-}
-
-// ==========================================
-// INICIALIZADOR GENERAL DE LA APLICACIÓN
+// INICIALIZADOR GENERAL
 // ==========================================
 document.addEventListener('DOMContentLoaded', () => {
     navPublic('home-view');
     cargarCacheAlInicio(); 
-    generarCaptchas(); // <-- Ahora en plural
+    generarCaptchas();
 });

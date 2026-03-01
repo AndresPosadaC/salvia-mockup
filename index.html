@@ -71,20 +71,26 @@
             </div>
         </div>
         
-        <header class="bg-[#CF3671] shadow-md border-b-4 border-salvia-purple sticky top-0 z-40 shrink-0">
-            <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+        <header class="bg-[#B53D75] shadow-md border-b-4 border-salvia-purple sticky top-0 z-40 shrink-0">
+            <div class="container mx-auto px-4 py-4 flex justify-between items-center relative">
                 <div class="flex items-center space-x-3">
-                    
-                    <div class="text-salvia-purple font-bold text-xl flex items-center border-r-2 border-gray-300 pr-4">
-                        <img src="./assets/img/minigualdad_blanco.png" alt="MinIgualdad" class="h-20 md:h-24 object-contain mr-2">
+                    <div class="text-white font-bold text-xl flex items-center border-r-2 border-white/30 pr-4">
+                        <img src="./assets/img/minigualdad_blanco.png" alt="MinIgualdad" class="h-10 md:h-12 object-contain mr-2"> 
+                        <div class="leading-tight">
+                            <span class="block text-sm font-normal text-white/80">Ministerio de</span> Igualdad y Equidad
+                        </div>
                     </div>
-                    
-                    <div class="text-salvia-purple font-extrabold text-2xl tracking-widest pl-2 flex items-center">
-                        <img src="./assets/img/salvia_logo_landing.png" alt="Salvia" class="h-20 md:h-24 object-contain mr-2">
+                    <div class="text-white font-extrabold text-2xl tracking-widest pl-2 flex items-center">
+                        <img src="./assets/img/flower.png" alt="Salvia" class="h-8 md:h-10 object-contain mr-2"> SALVIA
                     </div>
-                
                 </div>
-                <button id="btn-nav-login" onclick="navPublic('login-view')" class="text-sm bg-gray-100 hover:bg-gray-200 text-salvia-purple font-bold py-2 px-4 rounded border border-gray-300 transition">
+                
+                <div class="absolute left-1/2 transform -translate-x-1/2 hidden md:flex flex-col items-center">
+                    <span class="text-white font-bold tracking-widest text-sm">KREIVO</span>
+                    <span class="bg-white text-[#B53D75] text-[10px] font-black px-2 py-0.5 rounded-full mt-1 shadow-inner">v2.0</span>
+                </div>
+
+                <button id="btn-nav-login" onclick="navPublic('login-view')" class="text-sm bg-white hover:bg-gray-100 text-[#380E44] font-bold py-2 px-4 rounded transition shadow-sm focus:ring-4 focus:ring-white">
                     Ingreso Funcionarios
                 </button>
             </div>
@@ -107,23 +113,25 @@
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-4xl">
-                        
-                        <div class="bg-white rounded-2xl shadow-2xl p-8 border-t-8 border-[#FCCC3C] transform transition hover:-translate-y-2 flex flex-col items-center">
-                            <div class="bg-[#FCCC3C]/20 text-[#FCCC3C] p-4 rounded-full mb-6"><i class="fa-solid fa-shield-heart text-3xl"></i></div>
-                            <h2 class="text-2xl font-bold mb-3 text-gray-800">Reportar un caso</h2>
-                            <button onclick="abrirModalHistoria('reporte')" class="ml-3 text-gray-300 hover:text-[#380E44] transition-colors" title="Ver Historia de Usuario"><i class="fa-solid fa-circle-info text-xl"></i></button>
-                            <p class="text-gray-600 mb-8">Si eres víctima de violencia de género y estás en peligro comunícate con la Línea 155</p>
-                            <button onclick="navPublic('reporte-view')" class="w-full bg-[#FCCC3C] text-gray-900 font-bold py-4 px-6 rounded-lg text-lg hover:brightness-95 transition-all shadow-md">Iniciar Reporte</button>
+                        <div class="bg-white rounded-2xl shadow-2xl p-8 border-t-8 border-[#FCCC3C] flex flex-col items-center">
+                            <div class="bg-[#FCCC3C]/20 text-[#FCCC3C] p-4 rounded-full mb-6"><i class="fa-solid fa-users text-3xl"></i></div>
+                            <h2 class="text-2xl font-bold mb-3 text-gray-800 flex items-center justify-center">
+                                Reportar caso de un familiar o conocido
+                                <button onclick="abrirModalHistoria('reporte')" class="ml-3 text-gray-300 hover:text-[#FCCC3C] transition-colors" title="Ver Historia de Usuario"><i class="fa-solid fa-circle-info text-xl"></i></button>
+                            </h2>
+                            <p class="text-gray-600 mb-8">Si conoce a una mujer víctima de violencia, registre los datos de ella aquí para que la Línea 155 la contacte.</p>
+                            <button onclick="prepararFormulario('tercero')" class="w-full bg-[#FCCC3C] text-gray-900 font-bold py-4 px-6 rounded-lg text-lg hover:brightness-95 transition-all shadow-md focus:ring-4 focus:ring-yellow-300">Iniciar Reporte</button>
                         </div>
 
-                        <div class="bg-white rounded-2xl shadow-2xl p-8 border-t-8 border-[#380E44] transform transition hover:-translate-y-2 flex flex-col items-center">
-                            <div class="bg-[#380E44]/10 text-[#380E44] p-4 rounded-full mb-6"><i class="fa-solid fa-user-lock text-3xl"></i></div>
-                            <h2 class="text-2xl font-bold mb-3 text-gray-800">Consultar / Gestionar</h2>
-                            <button onclick="abrirModalHistoria('login')" class="ml-3 text-gray-300 hover:text-[#380E44] transition-colors" title="Ver Historia de Usuario"><i class="fa-solid fa-circle-info text-xl"></i></button>
-                            <p class="text-gray-600 mb-8">Acceso para ciudadanas y funcionarios de la red de atención.</p>
-                            <button onclick="navPublic('login-view')" class="w-full bg-[#380E44] text-white font-bold py-4 px-6 rounded-lg text-lg hover:bg-[#2a0a33] transition-all shadow-md">Ingresar al Sistema</button>
+                        <div class="bg-white rounded-2xl shadow-2xl p-8 border-t-8 border-[#FFB5C0] flex flex-col items-center">
+                            <div class="bg-[#FFB5C0]/10 text-[#FFB5C0] p-4 rounded-full mb-6"><i class="fa-solid fa-person-dress text-3xl"></i></div>
+                            <h2 class="text-2xl font-bold mb-3 text-gray-800 flex items-center justify-center">
+                                Consultar / Gestionar
+                                <button onclick="abrirModalHistoria('login')" class="ml-3 text-gray-300 hover:text-[#FF00FF] transition-colors" title="Ver Historia de Usuario"><i class="fa-solid fa-circle-info text-xl"></i></button>
+                            </h2>
+                            <p class="text-gray-600 mb-8">Acceso exclusivo para mujeres víctimas registradas en el ecosistema SALVIA.</p>
+                            <button onclick="navPublic('login-victima-view')" class="w-full bg-[#FFB5C0] text-white font-bold py-4 px-6 rounded-lg text-lg hover:bg-[#2a0a33] transition-all shadow-md focus:ring-4 focus:ring-purple-300">Ingreso Mujeres</button>
                         </div>
-
                     </div>
                 </div>
             </section>
@@ -134,14 +142,19 @@
                 </button>
                 
                 <div class="bg-white rounded-xl shadow-2xl overflow-hidden border border-gray-100">
-                    <div class="bg-[#380E44] text-white px-6 py-5 text-center">
-                        <h1 class="text-2xl font-bold">Registro de Atención Inicial</h1>
-                        <p class="text-sm mt-1 opacity-90">Sistema Nacional de Registro, Atención, Seguimiento y Monitoreo</p>
+                    <div class="bg-[#380E44] text-white px-6 py-5 flex justify-between items-center">
+                        <div>
+                            <h1 id="form-dynamic-title" class="text-2xl font-bold">Registro de Atención Inicial</h1>
+                            <p class="text-sm mt-1 opacity-90">Sistema Nacional de Registro, Atención, Seguimiento y Monitoreo</p>
+                        </div>
+                        <button type="button" onclick="toggleAsistenteVoz()" id="btn-audio" class="bg-white/20 hover:bg-white/30 p-3 rounded-full transition focus:ring-2 focus:ring-white outline-none" title="Activar Asistente de Voz para Invidentes">
+                            <i class="fa-solid fa-ear-listen text-xl"></i>
+                        </button>
                     </div>
                     
                     <div class="p-6 md:p-8">
-                        <p class="text-sm text-gray-600 mb-8 bg-blue-50 p-4 rounded-lg border-l-4 border-[#3366CC]">
-                            <strong>Orientación:</strong> Por favor, complete la información. Recuerde que el campo <strong>número telefónico de recontacto</strong> es vital para activar la ruta institucional.
+                        <p id="form-dynamic-instruction" class="text-sm text-gray-800 mb-8 bg-blue-50 p-4 rounded-lg border-l-4 border-[#3366CC]" tabindex="0">
+                            <strong>Orientación:</strong> Por favor complete la información. El campo de teléfono es obligatorio.
                         </p>
                         
                         <form id="form-reporte" onsubmit="enviarReporte(event)" class="space-y-6">
@@ -192,7 +205,7 @@
 
                                 <div class="group relative">
                                     <label class="block text-sm font-bold text-gray-700 mb-1">Número de documento</label>
-                                    <input type="text" inputmode="numeric" class="numpad-trigger w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-[#380E44] bg-gray-50 cursor-pointer" placeholder="Escriba el número de documento" readonly>
+                                    <input type="text" inputmode="numeric" class="numpad-trigger w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-[#380E44] bg-gray-50 cursor-pointer" placeholder="Escriba el número de documento">
                                     <div class="tooltip-text absolute z-10 w-64 p-2 -mt-2 text-xs text-white bg-gray-800 rounded-lg shadow-lg bottom-full left-0 mb-2">
                                         Solo se permiten números, sin espacios ni puntos.
                                     </div>
@@ -205,7 +218,7 @@
 
                                 <div class="group relative">
                                     <label class="block text-sm font-bold text-gray-700 mb-1">Número de teléfono <span class="text-red-500">*</span></label>
-                                    <input type="text" id="reporte-tel" inputmode="numeric" required class="numpad-trigger w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-[#380E44] bg-gray-50 cursor-pointer" placeholder="Ej: 3001234567" readonly>
+                                    <input type="text" id="reporte-tel" inputmode="numeric" required class="numpad-trigger w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-[#380E44] bg-gray-50 cursor-pointer" placeholder="Ej: 3001234567">
                                     <div class="tooltip-text absolute z-10 w-64 p-2 -mt-2 text-xs text-white bg-gray-800 rounded-lg shadow-lg bottom-full left-0 mb-2">
                                         Escriba el numero de teléfono seguro para contacto.
                                     </div>
@@ -330,7 +343,7 @@
                             <div class="flex items-center space-x-4 pt-6 mt-6 border-t border-gray-200">
                                 
                                 <span id="captcha-text" class="text-gray-600 font-mono text-lg italic select-none">Verificación: </span>
-                                <input type="text" id="reporte-captcha" required class="numpad-trigger w-24 border border-gray-300 rounded p-2 focus:ring-2 focus:ring-[#380E44] text-center cursor-pointer bg-gray-50" placeholder="?" inputmode="numeric" readonly>
+                                <input type="text" id="reporte-captcha" required class="numpad-trigger w-24 border border-gray-300 rounded p-2 focus:ring-2 focus:ring-[#380E44] text-center cursor-pointer bg-gray-50" placeholder="?" inputmode="numeric">
                                 <span class="text-xs text-gray-500">Haga clic en el cuadro para responder</span>
                             </div>
 
@@ -350,13 +363,13 @@
                     <button onclick="navPublic('home-view')" class="mb-6 text-gray-500 text-sm flex items-center hover:underline"><i class="fa-solid fa-arrow-left mr-2"></i> Volver</button>
                     <div class="text-center mb-8">
                         <h2 class="text-2xl font-bold text-salvia-purple">Ingresar a SALVIA</h2>
-                        <p class="text-sm text-gray-500 mt-2">Acceso seguro para ciudadanas, funcionarios y funcionarias.</p>
+                        <p class="text-sm text-gray-500 mt-2">Acceso seguro para funcionarios y funcionarias.</p>
                     </div>
                     
                     <form onsubmit="ingresarDashboard(event)" class="space-y-6">
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">👤 Número de documento</label>
-                            <input type="text" id="login-doc" required class="numpad-trigger w-full border-b-2 border-gray-300 px-2 py-1 focus:outline-none focus:border-salvia-purple transition cursor-pointer" placeholder="Ej: 123456789" inputmode="numeric" readonly>
+                            <input type="text" id="login-doc" required class="numpad-trigger w-full border-b-2 border-gray-300 px-2 py-1 focus:outline-none focus:border-salvia-purple transition cursor-pointer" placeholder="Ej: 123456789" inputmode="numeric">
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">🔒 Contraseña</label>
@@ -366,7 +379,7 @@
                         <div class="flex items-center space-x-4 pt-6 mt-6 border-t border-gray-200">
                                 <span id="login-captcha-text" class="text-gray-600 font-mono text-lg italic select-none">Verificación: </span>
                                 
-                                <input type="text" id="login-captcha" required class="numpad-trigger w-24 border border-gray-300 rounded p-2 focus:ring-2 focus:ring-[#380E44] text-center cursor-pointer bg-gray-50" placeholder="?" inputmode="numeric" readonly>
+                                <input type="text" id="login-captcha" required class="numpad-trigger w-24 border border-gray-300 rounded p-2 focus:ring-2 focus:ring-[#380E44] text-center cursor-pointer bg-gray-50" placeholder="?" inputmode="numeric">
                                 
                                 <span class="text-xs text-gray-500">Haga clic en el cuadro para responder</span>
                         </div>
@@ -378,6 +391,35 @@
                             Ingresar al Panel <i class="fa-solid fa-arrow-right-to-bracket ml-2"></i>
                         </button>
                     </form>
+                </div>
+            </section>
+
+            <section id="intermedio-funcionario-view" class="hidden-view flex-grow flex items-center justify-center p-4">
+                <div class="bg-white p-8 rounded-xl shadow-2xl max-w-md w-full text-center border-t-8 border-[#3366CC]">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-6">Seleccione una acción</h2>
+                    <div class="space-y-4">
+                        <button onclick="prepararFormulario('funcionario')" class="w-full bg-blue-100 text-blue-800 font-bold py-3 px-4 rounded hover:bg-blue-200 transition">Registrar un caso entrante</button>
+                        <button onclick="ingresarDashboardFinal()" class="w-full bg-[#380E44] text-white font-bold py-3 px-4 rounded hover:bg-purple-900 transition">Ingresar al Dashboard</button>
+                    </div>
+                </div>
+            </section>
+
+            <section id="login-victima-view" class="hidden-view flex-grow flex items-center justify-center p-4">
+                <div class="bg-white p-8 rounded-xl shadow-2xl max-w-md w-full border-t-8 border-[#380E44]">
+                    <button onclick="navPublic('home-view')" class="text-sm text-gray-500 mb-4 hover:underline"><i class="fa-solid fa-arrow-left"></i> Volver</button>
+                    <h2 class="text-2xl font-bold text-[#380E44] mb-2 text-center">Portal de Mujeres</h2>
+                    <p class="text-gray-600 text-sm text-center mb-6">Ingrese con sus credenciales o regístrese por primera vez.</p>
+                    <div class="space-y-4">
+                        <input type="text" placeholder="Usuario / Documento" class="w-full border p-3 rounded focus:ring-2 focus:ring-[#380E44]" tabindex="0">
+                        <input type="password" placeholder="Contraseña" class="w-full border p-3 rounded focus:ring-2 focus:ring-[#380E44]" tabindex="0">
+                        
+                        <div class="flex items-center justify-between pt-2 pb-2">
+                            <a href="#" class="text-sm text-[#380E44] hover:underline font-semibold">¿Olvidó su contraseña?</a>
+                            <a href="#" class="text-sm text-[#B53D75] hover:underline font-bold">Crear cuenta (Registrarse)</a>
+                        </div>
+                        
+                        <button onclick="navPublic('trazabilidad-view')" class="w-full bg-[#380E44] text-white font-bold py-3 rounded">Ingresar a mis casos</button>
+                    </div>
                 </div>
             </section>
 
