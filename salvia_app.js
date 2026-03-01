@@ -231,6 +231,7 @@ function generarCaptchas() {
 }
 
 
+
 // ==========================================
 // 8. ACCESIBILIDAD AVANZADA (AUDIO)
 // ==========================================
@@ -305,11 +306,12 @@ document.addEventListener('change', function(e) {
 // 9. GESTOR DE HISTORIAS DE USUARIO (MODAL)
 // ==========================================
 const userStories = {
-    'reporte': { title: 'Registro de Atención Inicial', role: 'Ciudadana / Víctima', content: '"Como ciudadana en situación de riesgo, quiero poder registrar mis datos demográficos básicos y una descripción de los hechos en un formulario seguro, para que el sistema active una alerta temprana y la Línea 155 pueda contactarme."' },
-    'login': { title: 'Acceso de Funcionarios', role: 'Operador / Funcionario de Red', content: '"Como operador de la Línea 155, necesito un portal de acceso seguro que valide mi identidad, para poder ingresar al sistema y visualizar los casos reportados por las ciudadanas manteniendo la confidencialidad."' },
-    'panel_control': { title: 'Panel de Control Estratégico', role: 'Supervisor / Director', content: '"Como supervisor, necesito visualizar métricas en tiempo real sobre los casos reportados, niveles de riesgo y tiempos de respuesta, para tomar decisiones informadas y asignar recursos eficientemente en la red de atención."' },
-    'seguimiento_casos': { title: 'Monitoreo de Rutas', role: 'Operador 155 / Orientador', content: '"Como operador, quiero ver una bandeja de entrada con los casos recién reportados, ordenados por urgencia y semaforizados, para poder iniciar el contacto de manera prioritaria y activar la ruta institucional."' },
-    'tamizaje_riesgo': { title: 'Valoración Técnica de Riesgo', role: 'Profesional Psicosocial / Comisaría', content: '"Como profesional en la ruta, necesito aplicar un cuestionario estandarizado que calcule automáticamente el riesgo de feminicidio, para clasificar el nivel de alerta (Extremo, Moderado, Bajo) y justificar medidas de protección."' },
+    'reporte_terceros': { title: 'Registro de Contacto indirecto', role: 'Familiar / Amigo / Vecino / + Equipo Territorial / ASP', content: '"Como allegado de una ciudadana en situación de riesgo, quiero poder registrar sus datos demográficos básicos y una descripción de los hechos en un formulario seguro, para que el sistema por medio del Agente Integral active una alerta temprana y la Línea 155 pueda contactarla."' },
+    'registro_victima': { title: 'Registro de Contacto directo', role: 'Víctima', content: '"Como ciudadana en situación de riesgo, quiero poder registrar mis datos demográficos básicos y una descripción de los hechos en un formulario seguro que valide mi identidad, para que el sistema active una alerta temprana y la Línea 155 pueda contactarme. Y quiero poder hacer seguimiento a mi caso una vez ya registrado"' },
+    'registro_funcionarios': { title: 'Acceso de Funcionarios', role: 'Agente Integral', content: '"Primer contacto con la víctima. Crea el registro SALVIA, realiza la valoración de riesgo inicial y enruta el caso. Como operador de la Línea 155, necesito un portal de acceso seguro que valide mi identidad, para poder ingresar al sistema y visualizar los casos reportados por las ciudadanas manteniendo la confidencialidad."' },
+    'panel_control': { title: 'Panel de Control Estratégico', role: 'Gestora de Caso', content: '"Como supervisor, necesito visualizar métricas en tiempo real sobre los casos reportados, niveles de riesgo y tiempos de respuesta, para tomar decisiones informadas y asignar recursos eficientemente en la red de atención."' },
+    'seguimiento_casos': { title: 'Monitoreo de Rutas', role: 'Gestora de Caso / Agente Integral / Territorial / SALVIA Nacional', content: '"Como operador, quiero ver una bandeja de entrada con los casos recién reportados, ordenados por urgencia y semaforizados, para poder iniciar el contacto de manera prioritaria y activar la ruta institucional."' },
+    'tamizaje_riesgo': { title: 'Valoración Técnica de Riesgo', role: 'Equipo Psicosocial / Comisaría', content: '"Como profesional en la ruta, necesito aplicar un cuestionario estandarizado que calcule automáticamente el riesgo de feminicidio, para clasificar el nivel de alerta (Extremo, Moderado, Bajo) y justificar medidas de protección."' },
     'modulo_masp': { title: 'Módulo MASP', role: 'Mujeres en Actividades Sexuales Pagas', content: '"Como usuaria del ecosistema MASP, necesito contar con un botón de pánico y un canal de reporte discreto que me permita alertar a las autoridades si me encuentro en una situación de violencia en mi entorno laboral."' },
     'modulo_lgbtiq': { title: 'Enfoque Diferencial de Género', role: 'Analista de Casos', content: '"Como analista, necesito visualizar indicadores y variables específicas de identidad de género y orientación sexual, para garantizar que la atención cumpla con el enfoque diferencial y no revictimice a la población diversa."' }
 };
