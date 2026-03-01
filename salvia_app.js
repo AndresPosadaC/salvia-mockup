@@ -2,6 +2,7 @@
 // VARIABLES GLOBALES
 // ==========================================
 let sumaCorrectaReporte = 0;
+let vistaActualGlobal = 'Portal Público (Inicio)'; // Rastreará dónde está el usuario
 let sumaCorrectaLogin = 0;
 let rolActual = 'tercero';
 let asistenteVozActivo = false;
@@ -16,6 +17,12 @@ function navPublic(viewId) {
     const btnLogin = document.getElementById('btn-nav-login');
     if(viewId === 'home-view') btnLogin.style.display = 'block';
     else btnLogin.style.display = 'none';
+
+    // Actualizar el rastreador para el Google Form
+    if(viewId === 'home-view') vistaActualGlobal = 'Portal Público (Inicio)';
+    else if(viewId === 'reporte-view') vistaActualGlobal = 'Formulario de Reporte (Ciudadano/Tercero)';
+    else if(viewId === 'login-view') vistaActualGlobal = 'Login / Acceso de Funcionarios';
+    else if(viewId === 'login-victima-view' || viewId === 'intermedio-funcionario-view') vistaActualGlobal = 'Portal de Mujeres (Login/Trazabilidad)';
 }
 
 // ==========================================
@@ -185,6 +192,11 @@ function switchDashView(viewId) {
             <i class="fa-solid fa-circle-info text-2xl drop-shadow-sm"></i>
         </button>
     `;
+    // Actualizar el rastreador para el Google Form (DASHBOARD)
+    if(viewId === 'dashboard') vistaActualGlobal = 'Dashboard - Panel de Control';
+    else if(viewId === 'seguimiento') vistaActualGlobal = 'Dashboard - Bandeja de Seguimiento';
+    else if(viewId === 'tamizaje') vistaActualGlobal = 'Dashboard - Tamizaje de Riesgo';
+    else if(viewId === 'masp' || viewId === 'lgbtiq') vistaActualGlobal = 'Dashboard - Módulo MASP / LGBTIQ+';
 }
 
 // ==========================================
@@ -306,6 +318,58 @@ document.addEventListener('change', function(e) {
 // 9. GESTOR DE HISTORIAS DE USUARIO (MODAL)
 // ==========================================
 const userStories = {
+    'versiones': { 
+        title: 'KREIVO: Actualizaciones', 
+        role: 'Equipo Desarrollador', 
+        content: `
+            <div class="bg-blue-50 p-4 rounded-lg border border-blue-100 mt-2">
+                <h4 class="font-bold text-[#B53D75] mb-3">Versión 2.0 (Actual)</h4>
+                <ul class="space-y-3">
+                    <li class="flex items-start">
+                        <span class="bg-[#B53D75] text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold mr-3 shrink-0 mt-0.5">1</span> 
+                        <span>Tres formularios independientes por rol (Víctima / Funcionarios / Terceros).</span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="bg-[#B53D75] text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold mr-3 shrink-0 mt-0.5">2</span> 
+                        <span>Activación <i>voice audio</i> (Text-to-Speech) para accesibilidad en formularios.</span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="bg-[#B53D75] text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold mr-3 shrink-0 mt-0.5">3</span> 
+                        <span>Botón de tickets integrado para recopilación de <i>feedback</i> contextual.</span>
+                    </li>
+                </ul>
+            </div>
+        ` 
+    },
+    'glosario': { 
+        title: 'Glosario SALVIA', 
+        role: 'MinIgualdad', 
+        // Nota el uso de la comilla invertida al inicio y al final
+        content: `
+            <div class="overflow-x-auto rounded-lg shadow border border-gray-200 mt-2">
+                <table class="min-w-full text-left text-sm text-gray-700">
+                    <thead class="bg-[#380E44] text-white">
+                        <tr>
+                            <th class="px-4 py-3 font-bold uppercase tracking-wider text-xs">Término / Sigla</th>
+                            <th class="px-4 py-3 font-bold uppercase tracking-wider text-xs">Definición</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200">
+                        <tr class="bg-white hover:bg-gray-50"><td class="px-4 py-3 font-bold text-[#380E44]">SALVIA</td><td class="px-4 py-3">Sistema de información y protocolo operativo para la atención de víctimas de VBG/VPP.</td></tr>
+                        <tr class="bg-gray-50 hover:bg-gray-100"><td class="px-4 py-3 font-bold text-[#380E44]">VBG</td><td class="px-4 py-3">Violencia Basada en Género.</td></tr>
+                        <tr class="bg-white hover:bg-gray-50"><td class="px-4 py-3 font-bold text-[#380E44]">VPP</td><td class="px-4 py-3">Violencia contra la Pareja y en el ámbito familiar.</td></tr>
+                        <tr class="bg-gray-50 hover:bg-gray-100"><td class="px-4 py-3 font-bold text-[#380E44]">NNA</td><td class="px-4 py-3">Niños, Niñas y Adolescentes.</td></tr>
+                        <tr class="bg-white hover:bg-gray-50"><td class="px-4 py-3 font-bold text-[#380E44]">ASP</td><td class="px-4 py-3">Agente Social de Protección (equipo en territorio).</td></tr>
+                        <tr class="bg-gray-50 hover:bg-gray-100"><td class="px-4 py-3 font-bold text-[#380E44]">PQRS</td><td class="px-4 py-3">Peticiones, Quejas, Reclamos y Sugerencias.</td></tr>
+                        <tr class="bg-white hover:bg-gray-50"><td class="px-4 py-3 font-bold text-[#380E44]">Enrutamiento</td><td class="px-4 py-3">Proceso de referir a la víctima a las instituciones o servicios que corresponden.</td></tr>
+                        <tr class="bg-gray-50 hover:bg-gray-100"><td class="px-4 py-3 font-bold text-[#380E44]">Mec. Articulador</td><td class="px-4 py-3">Instancia de coordinación que facilita la respuesta institucional.</td></tr>
+                        <tr class="bg-white hover:bg-gray-50"><td class="px-4 py-3 font-bold text-[#380E44]">Medidas Emergencia</td><td class="px-4 py-3">Apoyos inmediatos (alojamiento, transporte) para proteger a la víctima.</td></tr>
+                        <tr class="bg-gray-50 hover:bg-gray-100"><td class="px-4 py-3 font-bold text-[#380E44]">Riesgo Feminicida</td><td class="px-4 py-3">Valoración del peligro para la vida (extremo, alto, moderado, bajo, sin riesgo).</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        ` 
+    },
     'reporte_terceros': { title: 'Registro de Contacto indirecto', role: 'Familiar / Amigo / Vecino / + Equipo Territorial / ASP', content: '"Como allegado de una ciudadana en situación de riesgo, quiero poder registrar sus datos demográficos básicos y una descripción de los hechos en un formulario seguro, para que el sistema por medio del Agente Integral active una alerta temprana y la Línea 155 pueda contactarla."' },
     'registro_victima': { title: 'Registro de Contacto directo', role: 'Víctima', content: '"Como ciudadana en situación de riesgo, quiero poder registrar mis datos demográficos básicos y una descripción de los hechos en un formulario seguro que valide mi identidad, para que el sistema active una alerta temprana y la Línea 155 pueda contactarme. Y quiero poder hacer seguimiento a mi caso una vez ya registrado"' },
     'registro_funcionarios': { title: 'Acceso de Funcionarios', role: 'Agente Integral', content: '"Primer contacto con la víctima. Crea el registro SALVIA, realiza la valoración de riesgo inicial y enruta el caso. Como operador de la Línea 155, necesito un portal de acceso seguro que valide mi identidad, para poder ingresar al sistema y visualizar los casos reportados por las ciudadanas manteniendo la confidencialidad."' },
@@ -321,7 +385,7 @@ function abrirModalHistoria(storyKey) {
     if (!story) return;
     document.getElementById('story-title').innerHTML = `<i class="fa-solid fa-book-open mr-2"></i> ${story.title}`;
     document.getElementById('story-role').innerText = `Rol: ${story.role}`;
-    document.getElementById('story-content').innerText = story.content;
+    document.getElementById('story-content').innerHTML = story.content;
     document.getElementById('story-modal').classList.remove('hidden');
 }
 function cerrarModalHistoria() { document.getElementById('story-modal').classList.add('hidden'); }
@@ -353,6 +417,25 @@ document.querySelectorAll('.risk-calc').forEach(radio => {
         }
     });
 });
+
+// ==========================================
+// 11. SISTEMA DE FEEDBACK CONTEXTUAL (GOOGLE FORMS)
+// ==========================================
+function abrirFormularioFeedback() {
+    // La URL base de tu formulario
+    const baseUrl = "https://docs.google.com/forms/d/e/1FAIpQLSc4qDbw38kp5I5DKDXM8EF-DoH4QcBI8dEdJ3K60aIRsRDLXA/viewform";
+    // El ID exacto de la pregunta "Módulo o Vista Actual"
+    const entryId = "entry.675421179";
+    
+    // Convertimos el texto (ej. "Portal Público (Inicio)") a formato URL (ej. Portal%20P%C3%BAblico...)
+    const vistaCodificada = encodeURIComponent(vistaActualGlobal);
+    
+    // Ensamblamos la URL final
+    const urlFinal = `${baseUrl}?usp=pp_url&${entryId}=${vistaCodificada}`;
+    
+    // Abrimos el formulario en una nueva pestaña
+    window.open(urlFinal, '_blank');
+}
 
 // ==========================================
 // INICIALIZADOR GENERAL
