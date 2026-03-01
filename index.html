@@ -49,7 +49,7 @@
                 </div>
                 <div>
                     <div>
-                        <span class="bg-white text-[#24A0B0] text-[10px] font-black px-2 py-0.5 rounded-full mt-1 shadow-inner"> versión 2.2
+                        <span class="bg-white text-[#24A0B0] text-[10px] font-black px-2 py-0.5 rounded-full mt-1 shadow-inner"> versión
                             <button onclick="abrirModalHistoria('versiones')" class="ml-3 text-gray-300 hover:text-[#24A0B0] transition-colors" title="Ver Historia de Usuario"><i class="fa-solid fa-circle-info text-xl"></i></button>
                         </span>
                     </div>
@@ -76,7 +76,7 @@
             </div>
         </div>
         
-        <header class="bg-[#B53D75] shadow-md border-b-4 border-salvia-purple sticky top-0 z-40 shrink-0">
+        <header class="bg-[#B53D75] shadow-md border-b-4 border-[#380E44] sticky top-0 z-40 shrink-0">
             <div class="container mx-auto px-4 py-4 flex justify-between items-center relative">
                 <div class="flex items-center space-x-3">
                     <div class="text-white font-bold text-xl flex items-center border-r-2 border-white/30 pr-4">
@@ -89,10 +89,16 @@
                         <img src="./assets/img/flower.png" alt="Salvia" class="h-8 md:h-10 object-contain mr-2"> SALVIA
                     </div>
                 </div>
-                
-                <button id="btn-nav-login" onclick="navPublic('login-view')" class="text-sm bg-white hover:bg-gray-100 text-[#380E44] font-bold py-2 px-4 rounded transition shadow-sm focus:ring-4 focus:ring-white">
-                    Ingreso Funcionarios
-                </button>
+
+                <div class="flex items-center space-x-3">
+                    <button type="button" onclick="toggleAsistenteVoz()" id="btn-audio" class="bg-white/20 hover:bg-white/30 text-white p-2.5 rounded-full transition focus:ring-4 focus:ring-white outline-none" title="Activar Asistente de Voz para Invidentes" tabindex="1">
+                        <i class="fa-solid fa-ear-listen text-lg"></i>
+                    </button>
+                    
+                    <button id="btn-nav-login" onclick="navPublic('login-view')" class="text-sm bg-white hover:bg-gray-100 text-[#B53D75] font-bold py-2 px-4 rounded transition shadow-sm focus:ring-4 focus:ring-white">
+                        Ingreso Funcionarios
+                    </button>
+                </div>
             </div>
         </header>
 
@@ -148,9 +154,6 @@
                             <h1 id="form-dynamic-title" class="text-2xl font-bold">Registro de Contacto indirecto</h1>
                             <p class="text-sm mt-1 opacity-90">Sistema Nacional de Registro, Atención, Seguimiento y Monitoreo</p>
                         </div>
-                        <button type="button" onclick="toggleAsistenteVoz()" id="btn-audio" class="bg-white/20 hover:bg-white/30 p-3 rounded-full transition focus:ring-2 focus:ring-white outline-none" title="Activar Asistente de Voz para Invidentes">
-                            <i class="fa-solid fa-ear-listen text-xl"></i>
-                        </button>
                     </div>
                     
                     <div class="p-6 md:p-8">
@@ -164,9 +167,9 @@
                                 
                                 <div class="group relative">
                                     <label class="block text-sm font-bold text-gray-700 mb-1">Nombres</label>
-                                    <input type="text" class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-[#380E44]" placeholder="Escriba su nombre completo">
+                                    <input type="text" class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-[#380E44]" placeholder="Escriba el nombre completo">
                                     <div class="tooltip-text absolute z-10 w-64 p-2 -mt-2 text-xs text-white bg-gray-800 rounded-lg shadow-lg bottom-full left-0 mb-2">
-                                        Escriba su nombre completo.
+                                        Escriba el nombre completo de la su allegada
                                     </div>
                                 </div>
 
@@ -180,9 +183,9 @@
 
                                 <div class="group relative">
                                     <label class="block text-sm font-bold text-gray-700 mb-1">Nombre identitario</label>
-                                    <input type="text" class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-[#380E44]" placeholder="Ej: Maria, Juan...">
+                                    <input type="text" class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-[#380E44]" placeholder="Su apodo, si usa uno">
                                     <div class="tooltip-text absolute z-10 w-64 p-2 -mt-2 text-xs text-white bg-gray-800 rounded-lg shadow-lg bottom-full left-0 mb-2">
-                                        Si cuenta con un nombre diferente al del documento de identidad.
+                                        Si ella cuenta con un nombre diferente al del documento de identidad.
                                     </div>
                                 </div>
 
@@ -206,7 +209,7 @@
 
                                 <div class="group relative">
                                     <label class="block text-sm font-bold text-gray-700 mb-1">Número de documento</label>
-                                    <input type="text" inputmode="numeric" class="numpad-trigger w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-[#380E44] bg-gray-50 cursor-pointer" placeholder="Escriba el número de documento">
+                                    <input type="text" inputmode="numeric" class="numpad-trigger w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-[#380E44] bg-gray-50 cursor-pointer" placeholder="Escriba el número de documento. Solo se permiten números, sin espacios ni puntos">
                                     <div class="tooltip-text absolute z-10 w-64 p-2 -mt-2 text-xs text-white bg-gray-800 rounded-lg shadow-lg bottom-full left-0 mb-2">
                                         Solo se permiten números, sin espacios ni puntos.
                                     </div>
@@ -219,7 +222,7 @@
 
                                 <div class="group relative">
                                     <label class="block text-sm font-bold text-gray-700 mb-1">Número de teléfono <span class="text-red-500">*</span></label>
-                                    <input type="text" id="reporte-tel" inputmode="numeric" required class="numpad-trigger w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-[#380E44] bg-gray-50 cursor-pointer" placeholder="Ej: 3001234567">
+                                    <input type="text" id="reporte-tel" inputmode="numeric" required class="numpad-trigger w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-[#380E44] bg-gray-50 cursor-pointer" placeholder="Obligatorio, escriba el numero de teléfono seguro para contacto. Ejemplo: 300 123 45 67">
                                     <div class="tooltip-text absolute z-10 w-64 p-2 -mt-2 text-xs text-white bg-gray-800 rounded-lg shadow-lg bottom-full left-0 mb-2">
                                         Escriba el numero de teléfono seguro para contacto.
                                     </div>
@@ -255,7 +258,7 @@
 
                                 <div>
                                     <label class="block text-sm font-bold text-gray-700 mb-1">Procedencia</label>
-                                    <input type="text" class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-[#380E44]" placeholder="Ej: Urbana, Rural, País...">
+                                    <input type="text" class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-[#380E44]" placeholder="Ejemplo: Urbana, Rural, País...">
                                 </div>
 
                                 <div>
@@ -270,6 +273,7 @@
                                             <option>Salud y Educación</option>
                                             <option>Tecnología</option>
                                             <option>Agricultura</option>
+                                            <option>Actividades Sexuales Pagas</option>
                                         </optgroup>
                                         <optgroup label="Mayor Demanda / Mejores Salarios">
                                             <option>Ingeniería Industrial</option>
@@ -285,7 +289,7 @@
 
                                 <div class="group relative">
                                     <label class="block text-sm font-bold text-gray-700 mb-1">Otra ocupación</label>
-                                    <input type="text" class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-[#380E44]" placeholder="¿Cuál?">
+                                    <input type="text" class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-[#380E44]" placeholder="¿Qué otra ocupación? Describa">
                                     <div class="tooltip-text absolute z-10 w-64 p-2 -mt-2 text-xs text-white bg-gray-800 rounded-lg shadow-lg bottom-full left-0 mb-2">
                                         Si su ocupación no estaba en la lista, escríbala aquí.
                                     </div>
@@ -306,7 +310,7 @@
 
                                 <div class="group relative">
                                     <label class="block text-sm font-bold text-gray-700 mb-1">Otro grupo étnico</label>
-                                    <input type="text" class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-[#380E44]" placeholder="¿Cuál?">
+                                    <input type="text" class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-[#380E44]" placeholder="¿Qué otro grupo étnico?">
                                     <div class="tooltip-text absolute z-10 w-64 p-2 -mt-2 text-xs text-white bg-gray-800 rounded-lg shadow-lg bottom-full left-0 mb-2">
                                         Si pertenece a otro grupo étnico, por favor escríbalo aquí.
                                     </div>
@@ -341,6 +345,23 @@
                                 </div>
                             </div>
 
+                            <div id="campos-credenciales" class="hidden mt-8 bg-purple-50 p-6 rounded-xl border border-purple-200">
+                                <h3 class="font-bold text-[#380E44] mb-4 border-b border-purple-200 pb-2">
+                                    <i class="fa-solid fa-key mr-2"></i> Crear Credenciales de Acceso
+                                </h3>
+                                <p class="text-xs text-purple-800 mb-4">Estos datos le permitirán ingresar a futuro para hacer seguimiento a su caso.</p>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div>
+                                        <label class="block text-sm font-bold text-gray-700 mb-1">Crear Usuario</label>
+                                        <input type="text" class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-[#380E44]" placeholder="Ejemplo: maria.perez26">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-bold text-gray-700 mb-1">Contraseña segura</label>
+                                        <input type="password" class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-[#380E44]" placeholder="••••••••">
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="flex items-center space-x-4 pt-6 mt-6 border-t border-gray-200">
                                 
                                 <span id="captcha-text" class="text-gray-600 font-mono text-lg italic select-none">Verificación: </span>
@@ -372,7 +393,7 @@
                     <form onsubmit="ingresarDashboard(event)" class="space-y-6">
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">👤 Número de documento</label>
-                            <input type="text" id="login-doc" required class="numpad-trigger w-full border-b-2 border-gray-300 px-2 py-1 focus:outline-none focus:border-salvia-purple transition cursor-pointer" placeholder="Ej: 123456789" inputmode="numeric">
+                            <input type="text" id="login-doc" required class="numpad-trigger w-full border-b-2 border-gray-300 px-2 py-1 focus:outline-none focus:border-salvia-purple transition cursor-pointer" placeholder="Ejemplo: 123456789" inputmode="numeric">
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">🔒 Contraseña</label>
@@ -411,17 +432,106 @@
                 <div class="bg-white p-8 rounded-xl shadow-2xl max-w-md w-full border-t-8 border-[#380E44]">
                     <button onclick="navPublic('home-view')" class="text-sm text-gray-500 mb-4 hover:underline"><i class="fa-solid fa-arrow-left"></i> Volver</button>
                     <h2 class="text-2xl font-bold text-[#380E44] mb-2 text-center">Portal de Mujeres</h2>
-                    <p class="text-gray-600 text-sm text-center mb-6">Ingrese con sus credenciales o regístrese por primera vez.</p>
-                    <div class="space-y-4">
-                        <input type="text" placeholder="Usuario / Documento" class="w-full border p-3 rounded focus:ring-2 focus:ring-[#380E44]" tabindex="0">
-                        <input type="password" placeholder="Contraseña" class="w-full border p-3 rounded focus:ring-2 focus:ring-[#380E44]" tabindex="0">
+                    <p class="text-gray-600 text-sm text-center mb-6">Haga seguimiento al estado de su caso.</p>
+                    
+                    <form onsubmit="ingresarVictima(event)" class="space-y-4">
+                        <input type="text" placeholder="Usuario" required class="w-full border p-3 rounded focus:ring-2 focus:ring-[#380E44]" tabindex="0">
+                        <input type="password" placeholder="Contraseña" required class="w-full border p-3 rounded focus:ring-2 focus:ring-[#380E44]" tabindex="0">
                         
+                        <div class="flex items-center space-x-4 pt-4 mt-4 border-t border-gray-200">
+                            <span id="victima-captcha-text" class="text-gray-600 font-mono text-sm italic select-none">Seguridad: </span>
+                            <input type="text" id="victima-captcha" required class="numpad-trigger w-24 border border-gray-300 rounded p-2 focus:ring-2 focus:ring-[#380E44] text-center bg-gray-50" placeholder="?" inputmode="numeric">
+                        </div>
+
                         <div class="flex items-center justify-between pt-2 pb-2">
-                            <a href="#" class="text-sm text-[#380E44] hover:underline font-semibold">¿Olvidó su contraseña?</a>
-                            <a href="#" class="text-sm text-[#B53D75] hover:underline font-bold">Crear cuenta (Registrarse)</a>
+                            <a href="#" class="text-xs text-[#380E44] hover:underline font-semibold">¿Olvidó su contraseña?</a>
+                            <a href="#" onclick="prepararFormulario('victima')" class="text-xs text-[#B53D75] hover:underline font-bold">Crear cuenta (Registrarse)</a>
                         </div>
                         
-                        <button onclick="navPublic('trazabilidad-view')" class="w-full bg-[#380E44] text-white font-bold py-3 rounded">Ingresar a mis casos</button>
+                        <button type="submit" class="w-full bg-[#380E44] text-white font-bold py-3 rounded hover:bg-purple-900 transition shadow-md">
+                            Ingresar a mis casos
+                        </button>
+                    </form>
+                </div>
+            </section>
+
+            <section id="trazabilidad-view" class="hidden-view flex-grow container mx-auto px-4 py-8 max-w-3xl">
+                
+                <div class="flex justify-between items-center mb-6">
+                    <button onclick="navPublic('login-victima-view')" class="text-[#380E44] font-bold flex items-center hover:underline focus:outline-none">
+                        <i class="fa-solid fa-arrow-left mr-2"></i> Volver
+                    </button>
+                    <button onclick="navPublic('home-view')" class="text-red-600 text-sm font-bold flex items-center hover:underline focus:outline-none">
+                        Cerrar Sesión <i class="fa-solid fa-right-from-bracket ml-2"></i>
+                    </button>
+                </div>
+
+                <div class="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100">
+                    
+                    <div class="bg-[#380E44] text-white px-6 py-5 flex justify-between items-center">
+                        <div>
+                            <h1 class="text-2xl font-bold">Trazabilidad de mi caso</h1>
+                            <p class="text-sm mt-1 opacity-90">Radicado: VBG-2026-8842</p>
+                        </div>
+                        <span class="bg-purple-800 text-xs font-bold px-3 py-1 rounded-full border border-purple-500 shadow-inner">EN SEGUIMIENTO</span>
+                    </div>
+
+                    <div class="p-6 md:p-8">
+                        <div class="bg-gray-50 rounded-xl p-5 mb-8 border border-gray-200 shadow-sm">
+                            <h3 class="font-bold text-gray-800 mb-3 border-b pb-2 flex items-center">
+                                <i class="fa-regular fa-folder-open mr-2 text-[#B53D75]"></i> Datos del Reporte
+                            </h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                                <div><span class="text-gray-500 block text-xs uppercase">Fecha de ingreso:</span> <span class="font-semibold text-gray-800">28 Feb 2026</span></div>
+                                <div><span class="text-gray-500 block text-xs uppercase">Canal de atención:</span> <span class="font-semibold text-gray-800">Portal Web (Registro Directo)</span></div>
+                                <div class="md:col-span-2"><span class="text-gray-500 block text-xs uppercase">Motivo principal:</span> <span class="font-semibold text-gray-800">Violencia Psicológica y Económica</span></div>
+                            </div>
+                        </div>
+
+                        <h3 class="font-bold text-gray-800 mb-6 text-lg">Estado Actual del Proceso</h3>
+                        
+                        <div class="relative border-l-4 border-gray-200 ml-4 space-y-8 pb-4">
+                            
+                            <div class="relative pl-8">
+                                <div class="absolute -left-3.5 top-0 w-6 h-6 bg-green-500 rounded-full border-4 border-white flex items-center justify-center shadow">
+                                    <i class="fa-solid fa-check text-white text-[10px]"></i>
+                                </div>
+                                <h4 class="font-bold text-gray-800 text-lg leading-tight">1. Recepción y Orientación Inicial</h4>
+                                <p class="text-sm text-[#B53D75] font-bold mb-1 mt-1"><i class="fa-solid fa-building text-xs mr-1"></i> Línea 155 - Operador Nacional</p>
+                                <p class="text-gray-600 text-sm bg-green-50 p-3 rounded-lg border border-green-100 mt-2">Caso registrado exitosamente. Se brindó contención emocional y se activó la ruta de atención prioritaria hacia la comisaría de su sector.</p>
+                                <span class="text-xs text-gray-400 mt-2 block"><i class="fa-regular fa-clock mr-1"></i> 28 Feb 2026 - 10:30 AM</span>
+                            </div>
+
+                            <div class="relative pl-8">
+                                <div class="absolute -left-3.5 top-0 w-6 h-6 bg-green-500 rounded-full border-4 border-white flex items-center justify-center shadow">
+                                    <i class="fa-solid fa-check text-white text-[10px]"></i>
+                                </div>
+                                <h4 class="font-bold text-gray-800 text-lg leading-tight">2. Valoración de Riesgo</h4>
+                                <p class="text-sm text-[#B53D75] font-bold mb-1 mt-1"><i class="fa-solid fa-building text-xs mr-1"></i> Comisaría de Familia (Cartagena)</p>
+                                <p class="text-gray-600 text-sm bg-green-50 p-3 rounded-lg border border-green-100 mt-2">Se realizó tamizaje psicosocial. Nivel de riesgo determinado: <strong>Moderado</strong>. Se remite solicitud de medidas de protección.</p>
+                                <span class="text-xs text-gray-400 mt-2 block"><i class="fa-regular fa-clock mr-1"></i> 01 Mar 2026 - 09:15 AM</span>
+                            </div>
+
+                            <div class="relative pl-8">
+                                <div class="absolute -left-3.5 top-0 w-6 h-6 bg-[#FCCC3C] rounded-full border-4 border-white shadow flex items-center justify-center">
+                                    <div class="w-2 h-2 bg-yellow-800 rounded-full animate-ping"></div>
+                                </div>
+                                <h4 class="font-bold text-[#380E44] text-lg leading-tight">3. Emisión de Medidas de Protección</h4>
+                                <p class="text-sm text-[#B53D75] font-bold mb-1 mt-1"><i class="fa-solid fa-building text-xs mr-1"></i> Juzgado de Familia / Policía Nacional</p>
+                                <p class="text-gray-800 text-sm bg-yellow-50 p-4 rounded-lg border border-yellow-200 mt-2 shadow-sm">
+                                    <strong>En trámite.</strong> El juzgado se encuentra evaluando la solicitud para emitir la orden de alejamiento. La Policía ha sido notificada para rondas preventivas en el sector.
+                                </p>
+                                <span class="text-xs text-gray-400 mt-2 block font-medium"><i class="fa-solid fa-rotate mr-1"></i> Actualizado: Hoy, 04:00 PM</span>
+                            </div>
+
+                            <div class="relative pl-8 opacity-50">
+                                <div class="absolute -left-3.5 top-0 w-6 h-6 bg-gray-300 rounded-full border-4 border-white shadow"></div>
+                                <h4 class="font-bold text-gray-600 text-lg leading-tight">4. Cierre y Seguimiento</h4>
+                                <p class="text-sm text-gray-500 font-bold mb-1 mt-1"><i class="fa-solid fa-building text-xs mr-1"></i> Equipo Psicosocial SALVIA</p>
+                                <p class="text-gray-500 text-sm mt-1">A la espera de confirmación de estabilización del riesgo.</p>
+                            </div>
+
+                        </div>
                     </div>
                 </div>
             </section>

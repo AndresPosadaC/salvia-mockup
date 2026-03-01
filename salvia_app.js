@@ -2,11 +2,12 @@
 // VARIABLES GLOBALES
 // ==========================================
 let sumaCorrectaReporte = 0;
-let vistaActualGlobal = 'Portal Público (Inicio)'; // Rastreará dónde está el usuario
 let sumaCorrectaLogin = 0;
+let sumaCorrectaVictima = 0; // NUEVO CAPTCHA
 let rolActual = 'tercero';
 let asistenteVozActivo = false;
 let inputActivo = null;
+let vistaActualGlobal = 'Portal Público (Inicio)';
 
 // ==========================================
 // 1. RUTEO PÚBLICO
@@ -18,11 +19,13 @@ function navPublic(viewId) {
     if(viewId === 'home-view') btnLogin.style.display = 'block';
     else btnLogin.style.display = 'none';
 
-    // Actualizar el rastreador para el Google Form
+    // RASTREADOR ACTUALIZADO PARA GOOGLE FORMS
     if(viewId === 'home-view') vistaActualGlobal = 'Portal Público (Inicio)';
-    else if(viewId === 'reporte-view') vistaActualGlobal = 'Formulario de Reporte (Ciudadano/Tercero)';
-    else if(viewId === 'login-view') vistaActualGlobal = 'Login / Acceso de Funcionarios';
-    else if(viewId === 'login-victima-view' || viewId === 'intermedio-funcionario-view') vistaActualGlobal = 'Portal de Mujeres (Login/Trazabilidad)';
+    // Si entra al reporte siendo víctima, lo marcamos como Registro, si no, como Tercero
+    else if(viewId === 'reporte-view') vistaActualGlobal = (rolActual === 'victima') ? 'Portal de Mujeres (Registro)' : 'Formulario de Reporte (Ciudadano/Tercero)';
+    else if(viewId === 'login-view' || viewId === 'intermedio-funcionario-view') vistaActualGlobal = 'Login / Acceso de Funcionarios';
+    else if(viewId === 'login-victima-view') vistaActualGlobal = 'Portal de Mujeres (Login/Trazabilidad)';
+    else if(viewId === 'trazabilidad-view') vistaActualGlobal = 'Trazabilidad de mi caso'; // Nuevo nombre exacto
 }
 
 // ==========================================
@@ -33,24 +36,28 @@ function prepararFormulario(rol) {
     const titulo = document.getElementById('form-dynamic-title');
     const instruccion = document.getElementById('form-dynamic-instruction');
     const btnSubmit = document.querySelector('#form-reporte button[type="submit"]');
+    const cajaCredenciales = document.getElementById('campos-credenciales'); // NUEVO
 
     if (rol === 'tercero') {
         titulo.innerText = "Reporte por Terceros (Familiar / Conocido)";
         instruccion.innerHTML = "<strong>Orientación:</strong> Los datos a continuación deben ser <strong>exclusivamente los de la víctima</strong> para que podamos contactarla. El campo de teléfono es el único obligatorio.";
         btnSubmit.innerText = "Enviar Reporte a la Línea 155";
+        if(cajaCredenciales) cajaCredenciales.classList.add('hidden'); // Ocultar
     } else if (rol === 'victima') {
         titulo.innerText = "Mi Registro Personal";
-        instruccion.innerHTML = "<strong>Orientación:</strong> Actualice su información personal. El sistema resguardará sus datos con máxima seguridad.";
-        btnSubmit.innerText = "Guardar mis datos";
+        instruccion.innerHTML = "<strong>Orientación:</strong> Por favor complete sus datos personales y cree un usuario y contraseña para poder hacer seguimiento a su caso.";
+        btnSubmit.innerText = "Registrarme y Crear Cuenta";
+        if(cajaCredenciales) cajaCredenciales.classList.remove('hidden'); // Mostrar
     } else if (rol === 'funcionario') {
         titulo.innerText = "Registro de Caso Entrante (Operador)";
         instruccion.innerHTML = "<strong>Orientación Operador:</strong> Diligencie los datos proporcionados por la ciudadana en la llamada. Verifique el número de contacto.";
         btnSubmit.innerText = "Radicar Caso en el Sistema";
+        if(cajaCredenciales) cajaCredenciales.classList.add('hidden'); // Ocultar
     }
     
     generarCaptchas();
     navPublic('reporte-view');
-    if(asistenteVozActivo) {leerTexto(titulo.innerText + ". " + instruccion.innerText.replace('Orientación:', 'Orientación. '));}
+    if(asistenteVozActivo) leerTexto("Formulario abierto. " + titulo.innerText + ". " + instruccion.innerText.replace('Orientación:', 'Orientación. '));
 }
 
 // ==========================================
@@ -166,6 +173,23 @@ function cerrarSesion() {
 }
 
 // ==========================================
+// FLUJO PORTAL DE MUJERES
+// ==========================================
+function ingresarVictima(e) {
+    e.preventDefault();
+    const captchaValor = document.getElementById('victima-captcha').value;
+    if (captchaValor !== sumaCorrectaVictima.toString()) {
+        alert("Suma de seguridad incorrecta. Intente de nuevo.");
+        if (asistenteVozActivo) leerTexto("Error. Suma de seguridad incorrecta.");
+        generarCaptchas();
+        return;
+    }
+    cerrarTeclado();
+    navPublic('trazabilidad-view');
+    e.target.reset();
+}
+
+// ==========================================
 // 5. NAVEGACIÓN DEL DASHBOARD Y BOTONES INFO
 // ==========================================
 function switchDashView(viewId) {
@@ -240,6 +264,15 @@ function generarCaptchas() {
     if (textoLogin) textoLogin.innerText = `Seguridad: ${num1L} + ${num2L} =`;
     const inputLogin = document.getElementById('login-captcha');
     if (inputLogin) inputLogin.value = '';
+
+    // --- 3. CAPTCHA PARA MUJERES VÍCTIMAS ---
+    const num1V = Math.floor(Math.random() * 10) + 1;
+    const num2V = Math.floor(Math.random() * 10) + 1;
+    sumaCorrectaVictima = num1V + num2V;
+    const textoVictima = document.getElementById('victima-captcha-text');
+    if (textoVictima) textoVictima.innerText = `Seguridad: ${num1V} + ${num2V} =`;
+    const inputVictima = document.getElementById('victima-captcha');
+    if (inputVictima) inputVictima.value = '';
 }
 
 
@@ -270,38 +303,47 @@ function leerTexto(texto) {
     window.speechSynthesis.speak(utterance);
 }
 
-// Leer cuando el usuario enfoca un campo (Tabulador)
+// Escuchador global de teclado (Tabulador)
 document.addEventListener('focusin', function(e) {
     if (!asistenteVozActivo) return;
     const elemento = e.target;
     
+    // 1. SI ES UN CAMPO DE FORMULARIO
     if (['INPUT', 'SELECT', 'TEXTAREA'].includes(elemento.tagName)) {
-        let textoALeer = "";
-        
-        // Buscar el label
+        let textoALeer = "Campo. ";
         const label = elemento.previousElementSibling;
+        
         if (label && label.tagName === 'LABEL') textoALeer += label.innerText + ". ";
         
-        // Lógica especial para Selects
         if (elemento.tagName === 'SELECT') {
             const opcionActual = elemento.options[elemento.selectedIndex].text;
-            textoALeer += "Lista desplegable. Use las flechas arriba y abajo de su teclado para cambiar. Opción actual: " + opcionActual;
-        } 
-        // Lógica especial para Captchas (Lee los números reales)
-        else if (elemento.id === 'reporte-captcha') {
+            textoALeer += "Lista desplegable. Use flechas arriba y abajo. Opción actual: " + opcionActual;
+        } else if (elemento.id === 'reporte-captcha') {
             const sumaTexto = document.getElementById('captcha-text').innerText;
-            textoALeer = "Verificación de seguridad. Por favor escriba el resultado de: " + sumaTexto;
-        }
-        else if (elemento.id === 'login-captcha') {
+            textoALeer = "Seguridad. Escriba el resultado de: " + sumaTexto;
+        } else if (elemento.id === 'login-captcha') {
             const sumaTexto = document.getElementById('login-captcha-text').innerText;
             textoALeer = "Seguridad. Escriba el resultado de: " + sumaTexto;
-        }
-        // Campos normales
-        else {
+        } else if (elemento.id === 'victima-captcha') {
+            const sumaTexto = document.getElementById('victima-captcha-text').innerText;
+            textoALeer = "Seguridad. Escriba el resultado de: " + sumaTexto;
+        } else {
             if (elemento.placeholder && elemento.placeholder !== '?') textoALeer += elemento.placeholder;
         }
         
         leerTexto(textoALeer);
+    } 
+    // 2. SI ES UN BOTÓN
+    else if (elemento.tagName === 'BUTTON') {
+        // Extrae el texto visible del botón, o el atributo 'title' si es solo un ícono
+        let textoBoton = elemento.innerText.trim() || elemento.title || "sin texto";
+        // Evitamos leer el propio botón de audio cada vez que se tabula sobre él si está vacío
+        if(textoBoton !== "") leerTexto("Botón: " + textoBoton);
+    } 
+    // 3. SI ES UN ENLACE
+    else if (elemento.tagName === 'A') {
+        let textoEnlace = elemento.innerText.trim();
+        if(textoEnlace !== "") leerTexto("Enlace: " + textoEnlace);
     }
 });
 
@@ -323,7 +365,7 @@ const userStories = {
         role: 'Equipo Desarrollador', 
         content: `
             <div class="bg-blue-50 p-4 rounded-lg border border-blue-100 mt-2">
-                <h4 class="font-bold text-[#B53D75] mb-3">Versión 2.0 (Actual)</h4>
+                <h4 class="font-bold text-[#B53D75] mb-3">Versión 2.3 (Actual)</h4>
                 <ul class="space-y-3">
                     <li class="flex items-start">
                         <span class="bg-[#B53D75] text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold mr-3 shrink-0 mt-0.5">1</span> 
