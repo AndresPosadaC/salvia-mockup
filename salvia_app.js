@@ -401,7 +401,7 @@ const userStories = {
         role: 'Equipo Desarrollador', 
         content: `
             <div class="bg-blue-50 p-4 rounded-lg border border-blue-100 mt-2">
-                <h4 class="font-bold text-[#B53D75] mb-3">Versión 2.3 (Actual)</h4>
+                <h4 class="font-bold text-[#B53D75] mb-3">Versión 2.4 (Actual)</h4>
                 <ul class="space-y-3">
                     <li class="flex items-start">
                         <span class="bg-[#B53D75] text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold mr-3 shrink-0 mt-0.5">1</span> 
@@ -414,6 +414,10 @@ const userStories = {
                     <li class="flex items-start">
                         <span class="bg-[#B53D75] text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold mr-3 shrink-0 mt-0.5">3</span> 
                         <span>Botón de tickets integrado para recopilación de <i>feedback</i> contextual.</span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="bg-[#B53D75] text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold mr-3 shrink-0 mt-0.5">4</span> 
+                        <span>Acceso a Módulo MASP - App Mobil SALVIA.</span>
                     </li>
                 </ul>
             </div>

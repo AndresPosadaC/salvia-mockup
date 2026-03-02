@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:mso="urn:schemas-microsoft-com:office:office" xmlns:msdt="uuid:C2F41010-65B3-11d1-A29F-00AA00C14882">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>App MASP - SALVIA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #e5e7eb; }
+        .app-hide { display: none !important; }
+        
+        /* Animaciones para transiciones fluidas estilo app */
+        .slide-in { animation: slideIn 0.3s forwards cubic-bezier(0.16, 1, 0.3, 1); }
+        .fade-in { animation: fadeIn 0.3s forwards; }
+        @keyframes slideIn { from { transform: translateX(100%); opacity: 0.5; } to { transform: translateX(0); opacity: 1; } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        
+        /* Ocultar barra de scroll para que parezca app nativa */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+
+<!--[if gte mso 9]><xml>
+<mso:CustomDocumentProperties>
+<mso:_ApprovalStatus msdt:dt="string">0</mso:_ApprovalStatus>
+<mso:_ApprovalAssignedTo msdt:dt="string"></mso:_ApprovalAssignedTo>
+<mso:_ApprovalRespondedBy msdt:dt="string"></mso:_ApprovalRespondedBy>
+<mso:_ApprovalSentBy msdt:dt="string"></mso:_ApprovalSentBy>
+</mso:CustomDocumentProperties>
+</xml><![endif]-->
+</head>
+<body class="flex items-center justify-center min-h-screen">
+
+    <div class="relative w-full h-screen sm:h-[800px] sm:w-[390px] sm:rounded-[3rem] sm:border-[12px] border-gray-900 bg-white shadow-2xl overflow-hidden flex flex-col">
+        
+        <div class="absolute top-0 w-full h-7 z-50 flex justify-between items-center px-6 text-[11px] font-medium text-gray-800 bg-transparent">
+            <span id="clock">9:41</span>
+            <div class="flex items-center space-x-1.5">
+                <i class="fa-solid fa-signal"></i>
+                <i class="fa-solid fa-wifi"></i>
+                <i class="fa-solid fa-battery-full text-sm"></i>
+            </div>
+        </div>
+
+        <div id="view-splash" class="absolute inset-0 bg-[#380E44] z-40 flex flex-col items-center justify-center fade-in">
+            <img src="./assets/img/flower.png" alt="Salvia Logo" class="w-24 mb-6 drop-shadow-lg">
+            <h1 class="text-white text-4xl font-black tracking-widest mb-12">MASP</h1>
+            
+            <div id="biometric-prompt" class="hidden flex-col items-center text-white/80">
+                <i class="fa-solid fa-face-viewfinder text-5xl mb-4 text-pink-400 animate-pulse"></i>
+                <p class="text-sm">Reconociendo Face ID...</p>
+            </div>
+        </div>
+
+        <div id="view-login" class="app-hide absolute inset-0 bg-white z-30 flex flex-col items-center justify-center px-6 pt-10 pb-6 slide-in overflow-y-auto no-scrollbar">
+            <div class="w-16 h-16 bg-purple-100 rounded-2xl flex items-center justify-center mb-6">
+                <i class="fa-solid fa-shield-halved text-3xl text-[#380E44]"></i>
+            </div>
+            <h2 class="text-2xl font-bold text-gray-900 mb-2 text-center">Bienvenida a tu espacio seguro</h2>
+            <p class="text-gray-500 text-center text-sm mb-10">Regístrate para conectar con la comunidad y tener acceso a la línea de emergencia.</p>
+
+            <div class="w-full space-y-3 mb-8">
+                <button onclick="simularRegistro()" class="w-full bg-white border border-gray-300 text-gray-700 font-bold py-3.5 px-4 rounded-xl shadow-sm flex items-center justify-center active:bg-gray-50">
+                    <i class="fa-brands fa-google text-red-500 mr-3 text-lg"></i> Continuar con Google
+                </button>
+                <button onclick="simularRegistro()" class="w-full bg-[#1877F2] text-white font-bold py-3.5 px-4 rounded-xl shadow-sm flex items-center justify-center active:bg-blue-700">
+                    <i class="fa-brands fa-facebook mr-3 text-lg"></i> Continuar con Facebook
+                </button>
+                <button onclick="simularRegistro()" class="w-full bg-black text-white font-bold py-3.5 px-4 rounded-xl shadow-sm flex items-center justify-center active:bg-gray-800">
+                    <i class="fa-brands fa-apple mr-3 text-lg"></i> Continuar con Apple
+                </button>
+            </div>
+
+            <div class="flex items-center w-full mb-6">
+                <div class="flex-grow border-t border-gray-200"></div>
+                <span class="px-3 text-gray-400 text-xs font-bold uppercase">O usar correo</span>
+                <div class="flex-grow border-t border-gray-200"></div>
+            </div>
+
+            <button onclick="simularRegistro()" class="w-full bg-purple-50 text-[#380E44] font-bold py-3.5 px-4 rounded-xl border border-purple-200 active:bg-purple-100">
+                Registrarse con Email
+            </button>
+        </div>
+
+        <div id="view-main" class="app-hide absolute inset-0 bg-gray-50 z-20 flex flex-col slide-in">
+            
+            <div id="tab-content" class="flex-1 overflow-y-auto no-scrollbar pb-20 pt-10">
+                
+                <div id="tab-alarma" class="h-full flex flex-col items-center justify-center px-6 relative">
+                    
+                    <div id="sos-estado-1" class="flex flex-col items-center justify-center w-full transition-all duration-300">
+                        <h2 class="text-xl font-bold text-gray-800 mb-2">Botón de Emergencia</h2>
+                        <p class="text-center text-gray-500 text-sm mb-12">Toca el botón para alertar a la Línea 155 con tu ubicación GPS.</p>
+                        
+                        <button onclick="iniciarAlertaSOS()" class="relative w-48 h-48 bg-red-600 rounded-full shadow-[0_0_40px_rgba(220,38,38,0.4)] flex items-center justify-center active:scale-95 transition-transform group">
+                            <div class="absolute inset-0 bg-red-500 rounded-full animate-ping opacity-20"></div>
+                            <div class="absolute inset-2 bg-red-700 rounded-full flex flex-col items-center justify-center">
+                                <i class="fa-solid fa-bolt text-4xl text-white mb-1"></i>
+                                <span class="text-white font-black text-2xl tracking-widest">S.O.S</span>
+                            </div>
+                        </button>
+                    </div>
+
+                    <div id="sos-estado-2" class="hidden flex-col items-center justify-center w-full">
+                        <h2 class="text-2xl font-bold text-red-600 mb-2 animate-pulse">Enviando Alerta...</h2>
+                        <p class="text-center text-gray-500 text-sm mb-8">Obteniendo coordenadas GPS precisas</p>
+                        
+                        <div class="relative w-40 h-40 mb-10 flex items-center justify-center">
+                            <svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+                                <circle cx="50" cy="50" r="45" fill="none" stroke="#fee2e2" stroke-width="8"></circle>
+                                <circle id="sos-timer-circle" cx="50" cy="50" r="45" fill="none" stroke="#ef4444" stroke-width="8" stroke-dasharray="283" stroke-dashoffset="0" class="transition-all duration-1000 ease-linear"></circle>
+                            </svg>
+                            <span id="sos-countdown" class="absolute text-5xl font-black text-red-600">3</span>
+                        </div>
+                        
+                        <button onclick="cancelarAlertaSOS()" class="bg-gray-200 text-gray-700 font-bold py-3 px-10 rounded-full hover:bg-gray-300 transition-colors shadow-sm">
+                            CANCELAR ALERTA
+                        </button>
+                    </div>
+
+                    <div id="sos-estado-3" class="hidden flex-col items-center justify-center w-full slide-in">
+                        <div class="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mb-6">
+                            <i class="fa-solid fa-check text-5xl text-green-500"></i>
+                        </div>
+                        <h2 class="text-2xl font-black text-gray-900 mb-2 text-center">¡Alerta Silenciosa Enviada!</h2>
+                        <p class="text-center text-gray-600 text-sm mb-6 px-4">
+                            La Línea 155 y la Policía Nacional han recibido tu ubicación. La ayuda va en camino. <br><br>
+                            <strong>Por tu seguridad, esta pantalla se ocultará si bloqueas el celular.</strong>
+                        </p>
+                        
+                        <div class="bg-slate-100 p-4 rounded-xl w-full flex items-center mb-8 border border-slate-200">
+                            <div class="w-10 h-10 bg-[#380E44] rounded-full flex items-center justify-center shrink-0 mr-3">
+                                <i class="fa-solid fa-location-dot text-white"></i>
+                            </div>
+                            <div>
+                                <p class="text-[10px] text-gray-500 font-bold uppercase tracking-wider">Última ubicación enviada</p>
+                                <p class="text-sm font-bold text-gray-800">Cartagena, Bolívar</p>
+                                <p class="text-xs font-mono text-gray-500 mt-0.5">Lat: 10.3910, Lng: -75.4794</p>
+                            </div>
+                        </div>
+                        
+                        <button onclick="resetearAlertaSOS()" class="text-gray-400 text-sm font-bold underline hover:text-gray-600">
+                            Ocultar esta pantalla (Volver al inicio)
+                        </button>
+                    </div>
+
+                </div>
+
+                <div id="tab-comunidad" class="app-hide h-full flex flex-col">
+                    
+                    <div class="px-5 pt-10 pb-4 border-b border-gray-100 mb-4 sticky top-0 bg-gray-50 z-10 shadow-sm">
+                        <h2 class="text-xl font-black text-gray-900 leading-tight flex items-center">
+                            <i class="fa-solid fa-users-rays text-[#B53D75] mr-2"></i> Red Segura
+                        </h2>
+                        <p class="text-xs text-gray-500 mt-1"><i class="fa-solid fa-lock text-[10px] mr-1"></i> Comunidad cifrada de apoyo mutuo.</p>
+                    </div>
+                    
+                    <div class="flex-1 overflow-y-auto px-4 pb-24 no-scrollbar">
+                        
+                        <div class="bg-white p-4 rounded-2xl shadow-sm border border-purple-100 mb-6 slide-in" style="animation-delay: 0.1s;">
+                            <div class="flex space-x-3">
+                                <div class="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center shrink-0">
+                                    <i class="fa-solid fa-user-secret text-gray-500"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <textarea id="post-input" rows="2" class="w-full bg-transparent text-sm border-none focus:outline-none resize-none placeholder-gray-400" placeholder="¿Quieres compartir algo? Estás en un espacio seguro..."></textarea>
+                                    <div class="flex justify-between items-center mt-2 pt-2 border-t border-gray-50">
+                                        <div class="flex space-x-4 text-gray-400">
+                                            <button class="hover:text-[#B53D75] transition"><i class="fa-solid fa-image"></i></button>
+                                            <button class="hover:text-[#B53D75] transition"><i class="fa-solid fa-face-smile"></i></button>
+                                        </div>
+                                        <button onclick="publicarPost()" class="bg-[#380E44] text-white text-xs font-bold py-1.5 px-4 rounded-full hover:bg-purple-900 transition active:scale-95 shadow-sm">
+                                            Publicar
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="feed-posts" class="space-y-4">
+                            
+                            <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 slide-in" style="animation-delay: 0.2s;">
+                                <div class="flex items-center justify-between mb-2">
+                                    <div class="flex items-center space-x-2">
+                                        <div class="w-8 h-8 bg-pink-100 rounded-full flex items-center justify-center">
+                                            <i class="fa-solid fa-mask text-pink-500 text-xs"></i>
+                                        </div>
+                                        <div>
+                                            <span class="font-bold text-sm text-gray-800">Usuaria Anónima</span>
+                                            <span class="text-[10px] text-gray-400 block">Hace 15 min • Cartagena</span>
+                                        </div>
+                                    </div>
+                                    <button class="text-gray-300 hover:text-gray-500"><i class="fa-solid fa-ellipsis"></i></button>
+                                </div>
+                                <p class="text-sm text-gray-600 leading-relaxed mb-3">
+                                    Hoy fui a la Comisaría de Familia y me atendieron súper rápido. Si alguna tiene miedo de ir, les prometo que las orientadoras son muy amables. ¡No estamos solas! 💜
+                                </p>
+                                <div class="flex items-center space-x-6 text-gray-400 text-xs font-medium">
+                                    <button class="flex items-center hover:text-[#B53D75] transition">
+                                        <i class="fa-regular fa-heart mr-1.5 text-lg"></i> 24
+                                    </button>
+                                    <button class="flex items-center hover:text-[#B53D75] transition">
+                                        <i class="fa-regular fa-comment mr-1.5 text-lg"></i> 5
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 slide-in" style="animation-delay: 0.3s;">
+                                <div class="flex items-center justify-between mb-2">
+                                    <div class="flex items-center space-x-2">
+                                        <div class="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center">
+                                            <i class="fa-solid fa-user-ninja text-purple-500 text-xs"></i>
+                                        </div>
+                                        <div>
+                                            <span class="font-bold text-sm text-gray-800">Usuaria Anónima</span>
+                                            <span class="text-[10px] text-gray-400 block">Hace 2 horas</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p class="text-sm text-gray-600 leading-relaxed mb-3">
+                                    Chicas, ¿alguien sabe cuánto demora el trámite de las medidas de protección una vez el nivel de riesgo sale "Moderado"? Estoy un poco ansiosa esperando la respuesta del juzgado.
+                                </p>
+                                <div class="flex items-center space-x-6 text-gray-400 text-xs font-medium">
+                                    <button class="flex items-center text-[#B53D75] transition">
+                                        <i class="fa-solid fa-heart mr-1.5 text-lg"></i> 12
+                                    </button>
+                                    <button class="flex items-center hover:text-[#B53D75] transition">
+                                        <i class="fa-regular fa-comment mr-1.5 text-lg"></i> 8
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-indigo-50 p-4 rounded-2xl shadow-sm border border-indigo-100 slide-in" style="animation-delay: 0.4s;">
+                                <div class="flex items-center space-x-2 mb-2">
+                                    <div class="w-8 h-8 bg-[#380E44] rounded-full flex items-center justify-center text-white">
+                                        <i class="fa-solid fa-shield-halved text-xs"></i>
+                                    </div>
+                                    <div>
+                                        <span class="font-bold text-sm text-[#380E44]">Equipo SALVIA</span>
+                                        <span class="text-[10px] font-bold text-indigo-500 block uppercase">Mensaje Fijado</span>
+                                    </div>
+                                </div>
+                                <p class="text-sm text-indigo-900 leading-relaxed">
+                                    Recuerden que la Línea 155 es gratuita y funciona 24/7. Si no pueden hablar por teléfono, usen el Botón de Emergencia (SOS) en esta app para enviar una alerta silenciosa.
+                                </p>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div id="tab-perfil" class="app-hide h-full flex flex-col">
+                    
+                    <div class="bg-white px-6 pt-10 pb-6 rounded-b-3xl shadow-sm mb-6 flex items-center space-x-4 border-b border-gray-100 sticky top-0 z-10">
+                        <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center text-2xl text-[#380E44] font-bold shadow-inner relative">
+                            MP
+                            <div class="absolute bottom-0 right-0 w-4 h-4 bg-green-500 border-2 border-white rounded-full"></div>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-black text-gray-900 leading-tight">María Pérez</h3>
+                            <p class="text-xs text-gray-500 mb-1">maria.perez@email.com</p>
+                            <span class="inline-block bg-purple-50 text-[#380E44] text-[10px] px-2 py-0.5 rounded-md font-bold border border-purple-100">Cuenta Verificada</span>
+                        </div>
+                    </div>
+
+                    <div class="px-5 mb-6 slide-in" style="animation-delay: 0.1s;">
+                        <div class="flex justify-between items-end mb-3 px-1">
+                            <h4 class="font-bold text-gray-800 text-sm">Estado de mi caso</h4>
+                            <span class="text-[10px] font-mono text-[#B53D75] bg-pink-50 px-2 py-0.5 rounded font-bold">VBG-2026-8842</span>
+                        </div>
+                        
+                        <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
+                            <div class="relative border-l-2 border-gray-100 ml-2 space-y-6 pb-2">
+                                
+                                <div class="relative pl-6">
+                                    <div class="absolute -left-[11px] top-0 w-5 h-5 bg-green-500 rounded-full border-4 border-white flex items-center justify-center shadow-sm"></div>
+                                    <h5 class="font-bold text-gray-800 text-xs">Recepción y Orientación</h5>
+                                    <p class="text-[10px] text-gray-400 mt-0.5"><i class="fa-regular fa-clock mr-1"></i>28 Feb 2026</p>
+                                </div>
+
+                                <div class="relative pl-6">
+                                    <div class="absolute -left-[11px] top-0 w-5 h-5 bg-green-500 rounded-full border-4 border-white flex items-center justify-center shadow-sm"></div>
+                                    <h5 class="font-bold text-gray-800 text-xs">Valoración de Riesgo</h5>
+                                    <p class="text-[10px] text-gray-400 mt-0.5"><i class="fa-regular fa-clock mr-1"></i>01 Mar 2026</p>
+                                </div>
+
+                                <div class="relative pl-6">
+                                    <div class="absolute -left-[11px] top-0 w-5 h-5 bg-[#FCCC3C] rounded-full border-4 border-white flex items-center justify-center shadow-sm">
+                                        <div class="w-1.5 h-1.5 bg-yellow-800 rounded-full animate-ping"></div>
+                                    </div>
+                                    <h5 class="font-bold text-[#380E44] text-xs">Medidas de Protección</h5>
+                                    <p class="text-[10px] text-[#B53D75] font-bold mt-0.5">Juzgado / Policía</p>
+                                    <p class="text-[10px] text-gray-600 bg-yellow-50 p-2.5 rounded-lg mt-1.5 border border-yellow-100 leading-snug">
+                                        En trámite. Policía notificada para rondas preventivas.
+                                    </p>
+                                </div>
+                            </div>
+                            
+                            <button class="w-full mt-5 bg-purple-50 text-[#380E44] text-xs font-bold py-2.5 rounded-xl transition active:bg-purple-100">
+                                Ver historial completo
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="px-5 mb-6 slide-in" style="animation-delay: 0.2s;">
+                        <h4 class="font-bold text-gray-800 text-sm mb-3 px-1">Información Básica</h4>
+                        <div class="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 space-y-3">
+                            <div class="flex justify-between items-center border-b border-gray-50 pb-3">
+                                <span class="text-xs text-gray-500 flex items-center"><i class="fa-solid fa-phone w-4"></i> Teléfono</span>
+                                <span class="text-xs font-bold text-gray-800">+57 300 123 4567</span>
+                            </div>
+                            <div class="flex justify-between items-center border-b border-gray-50 pb-3">
+                                <span class="text-xs text-gray-500 flex items-center"><i class="fa-solid fa-venus w-4"></i> Género</span>
+                                <span class="text-xs font-bold text-gray-800">Mujer</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-xs text-gray-500 flex items-center"><i class="fa-solid fa-location-dot w-4"></i> Ubicación</span>
+                                <span class="text-xs font-bold text-gray-800">Cartagena, Bolívar</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="px-5 pb-8 mt-auto slide-in" style="animation-delay: 0.3s;">
+                        <button onclick="cerrarSesionApp()" class="w-full bg-red-50 text-red-600 text-sm font-bold py-3.5 rounded-2xl border border-red-100 active:bg-red-100 transition flex items-center justify-center">
+                            <i class="fa-solid fa-power-off mr-2"></i> Cerrar Sesión Segura
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+
+            <nav class="absolute bottom-0 w-full h-20 bg-white border-t border-gray-200 flex justify-around items-center px-2 pb-safe shadow-[0_-10px_20px_rgba(0,0,0,0.03)] rounded-b-[2.5rem]">
+                
+                <button onclick="cambiarTab('comunidad')" id="btn-tab-comunidad" class="flex flex-col items-center justify-center w-16 h-12 text-gray-400 hover:text-[#B53D75] transition-colors">
+                    <i class="fa-solid fa-users text-xl mb-1"></i>
+                    <span class="text-[10px] font-bold">Comunidad</span>
+                </button>
+                
+                <button onclick="cambiarTab('alarma')" id="btn-tab-alarma" class="flex flex-col items-center justify-center w-20 h-16 -mt-6 bg-white rounded-full border border-gray-100 shadow-lg text-red-500">
+                    <div class="w-14 h-14 bg-red-50 rounded-full flex flex-col items-center justify-center">
+                        <i class="fa-solid fa-shield-halved text-2xl"></i>
+                    </div>
+                </button>
+                
+                <button onclick="cambiarTab('perfil')" id="btn-tab-perfil" class="flex flex-col items-center justify-center w-16 h-12 text-gray-400 hover:text-[#B53D75] transition-colors">
+                    <i class="fa-solid fa-user text-xl mb-1"></i>
+                    <span class="text-[10px] font-bold">Perfil</span>
+                </button>
+            </nav>
+
+        </div>
+    </div>
+
+    <button onclick="abrirFormularioFeedbackMasp()" class="fixed bottom-6 right-6 z-[100] bg-[#B53D75] text-white p-4 rounded-full shadow-2xl hover:bg-[#8e2d5a] transition-all transform hover:scale-105 flex items-center justify-center group focus:outline-none">
+        <i class="fa-solid fa-lightbulb text-2xl animate-pulse group-hover:animate-none"></i>
+        <span class="max-w-0 overflow-hidden whitespace-nowrap group-hover:max-w-xs transition-all duration-300 ease-in-out text-sm font-bold pl-0 group-hover:pl-3">
+            Dejar un comentario
+        </span>
+    </button>
+
+    <script>
+        // ==========================================
+        // LÓGICA DE LA APP MÓVIL
+        // ==========================================
+        
+        let vistaMaspActual = 'App Móvil MASP (Login/Registro)';
+
+        // 1. Simulación de reloj en la barra de estado
+        setInterval(() => {
+            const date = new Date();
+            document.getElementById('clock').innerText = date.getHours() + ":" + date.getMinutes().toString().padStart(2, '0');
+        }, 1000);
+
+        // 2. Control de Inicio (Verificar si ya está "registrada")
+        document.addEventListener('DOMContentLoaded', () => {
+            const estaRegistrada = localStorage.getItem('masp_registrada') === 'true';
+            
+            setTimeout(() => {
+                if (estaRegistrada) {
+                    // Mostrar Biometría y entrar directo a la app
+                    document.getElementById('biometric-prompt').classList.remove('hidden');
+                    document.getElementById('biometric-prompt').classList.add('flex');
+                    
+                    setTimeout(() => {
+                        document.getElementById('view-splash').classList.add('app-hide');
+                        document.getElementById('view-main').classList.remove('app-hide');
+                        cambiarTab('alarma'); // Iniciar en el botón de pánico
+                    }, 1500); // Simula 1.5s de lectura de rostro
+                } else {
+                    // Mostrar pantalla de Login/Registro
+                    document.getElementById('view-splash').classList.add('app-hide');
+                    document.getElementById('view-login').classList.remove('app-hide');
+                }
+            }, 1000); // 1 segundo de pantalla con logo
+        });
+
+        // 3. Simular Registro Social
+        function simularRegistro() {
+            localStorage.setItem('masp_registrada', 'true'); // Guarda en caché que ya se registró
+            document.getElementById('view-login').classList.add('app-hide');
+            document.getElementById('view-main').classList.remove('app-hide');
+            cambiarTab('perfil'); // Si es nueva, la llevamos al perfil para completar datos
+        }
+
+        // 4. Navegación entre Pestañas (Bottom Tabs)
+        function cambiarTab(tabId) {
+            // Ocultar todos los tabs
+            ['alarma', 'comunidad', 'perfil'].forEach(t => {
+                document.getElementById('tab-' + t).classList.add('app-hide');
+                document.getElementById('btn-tab-' + t).classList.replace('text-[#B53D75]', 'text-gray-400'); // Quitar color activo
+                // Actualizar el rastreador para Google Forms
+            if(tabId === 'alarma') vistaMaspActual = 'App Móvil MASP (Botón S.O.S)';
+            else if(tabId === 'comunidad') vistaMaspActual = 'App Móvil MASP (Red Segura)';
+            else if(tabId === 'perfil') vistaMaspActual = 'App Móvil MASP (Perfil y Trazabilidad)';
+            });
+            
+            // Mostrar el tab seleccionado
+            document.getElementById('tab-' + tabId).classList.remove('app-hide');
+            document.getElementById('tab-' + tabId).classList.add('fade-in');
+            
+            // Colorear el botón activo (excepto la alarma que siempre es roja)
+            if(tabId !== 'alarma') {
+                document.getElementById('btn-tab-' + tabId).classList.replace('text-gray-400', 'text-[#B53D75]');
+            }
+        }
+
+        // 5. Cerrar sesión segura (Borra la memoria)
+        function cerrarSesionApp() {
+            localStorage.removeItem('masp_registrada'); // Borrar la huella de la usuaria
+            
+            // Ocultar la app y devolverla al login
+            document.getElementById('view-main').classList.add('app-hide');
+            document.getElementById('view-login').classList.remove('app-hide');
+            
+            // Resetear las pestañas para la próxima vez
+            cambiarTab('alarma');
+        }
+
+        // 6. Lógica de la Red Comunitaria (Feed)
+        function publicarPost() {
+            const input = document.getElementById('post-input');
+            const texto = input.value.trim();
+            
+            if (texto === "") return; // No publicar si está vacío
+            
+            const feed = document.getElementById('feed-posts');
+            
+            // Creamos el HTML del nuevo post
+            const nuevoPost = `
+                <div class="bg-white p-4 rounded-2xl shadow-sm border border-purple-200 slide-in">
+                    <div class="flex items-center justify-between mb-2">
+                        <div class="flex items-center space-x-2">
+                            <div class="w-8 h-8 bg-purple-600 rounded-full flex items-center justify-center">
+                                <i class="fa-solid fa-user-secret text-white text-xs"></i>
+                            </div>
+                            <div>
+                                <span class="font-bold text-sm text-purple-900">Tú (Anónima)</span>
+                                <span class="text-[10px] text-purple-500 block">Justo ahora</span>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-sm text-gray-800 leading-relaxed mb-3">${texto}</p>
+                    <div class="flex items-center space-x-6 text-gray-400 text-xs font-medium">
+                        <button class="flex items-center hover:text-[#B53D75] transition"><i class="fa-regular fa-heart mr-1.5 text-lg"></i> 0</button>
+                        <button class="flex items-center hover:text-[#B53D75] transition"><i class="fa-regular fa-comment mr-1.5 text-lg"></i> 0</button>
+                    </div>
+                </div>
+            `;
+            
+            // Inyectamos el post al inicio de la lista
+            feed.insertAdjacentHTML('afterbegin', nuevoPost);
+            
+            // Limpiamos la caja de texto
+            input.value = '';
+        }
+
+        // ==========================================
+        // 7. LÓGICA DEL BOTÓN S.O.S (TEMPORIZADOR Y ESTADOS)
+        // ==========================================
+        let sosInterval;
+        let sosTimeout;
+
+        function iniciarAlertaSOS() {
+            // 1. Ocultar Estado Inicial, Mostrar Conteo
+            document.getElementById('sos-estado-1').classList.add('hidden');
+            document.getElementById('sos-estado-1').classList.remove('flex');
+            document.getElementById('sos-estado-2').classList.remove('hidden');
+            document.getElementById('sos-estado-2').classList.add('flex');
+            
+            // 2. Variables del temporizador
+            let counter = 3;
+            const textElement = document.getElementById('sos-countdown');
+            const circleElement = document.getElementById('sos-timer-circle');
+            
+            // Reseteo visual
+            textElement.innerText = counter;
+            circleElement.style.strokeDashoffset = "0";
+            
+            // 3. Iniciar Conteo (Intervalo de 1 segundo)
+            sosInterval = setInterval(() => {
+                counter--;
+                textElement.innerText = counter;
+                
+                // Magia matemática para vaciar el círculo SVG (283 es la circunferencia total)
+                const offset = 283 - (283 * (3 - counter) / 3);
+                circleElement.style.strokeDashoffset = offset.toString();
+                
+                if (counter <= 0) {
+                    clearInterval(sosInterval);
+                }
+            }, 1000);
+            
+            // 4. Disparar el éxito después de 3000 milisegundos (3 segundos)
+            sosTimeout = setTimeout(() => {
+                alertaEnviada();
+            }, 3000);
+        }
+
+        function cancelarAlertaSOS() {
+            // Si le da clic en cancelar, detenemos el tiempo y reseteamos la pantalla
+            clearInterval(sosInterval);
+            clearTimeout(sosTimeout);
+            resetearAlertaSOS();
+        }
+
+        function alertaEnviada() {
+            // Ocultar Conteo, Mostrar Éxito
+            document.getElementById('sos-estado-2').classList.add('hidden');
+            document.getElementById('sos-estado-2').classList.remove('flex');
+            document.getElementById('sos-estado-3').classList.remove('hidden');
+            document.getElementById('sos-estado-3').classList.add('flex');
+        }
+
+        function resetearAlertaSOS() {
+            // Ocultar todo y volver al Estado Inicial
+            document.getElementById('sos-estado-2').classList.add('hidden');
+            document.getElementById('sos-estado-2').classList.remove('flex');
+            document.getElementById('sos-estado-3').classList.add('hidden');
+            document.getElementById('sos-estado-3').classList.remove('flex');
+            
+            document.getElementById('sos-estado-1').classList.remove('hidden');
+            document.getElementById('sos-estado-1').classList.add('flex');
+            
+            // Reparar el círculo SVG para la próxima vez
+            document.getElementById('sos-timer-circle').style.strokeDashoffset = "0";
+        }
+
+        // ==========================================
+        // 8. SISTEMA DE FEEDBACK CONTEXTUAL (GOOGLE FORMS)
+        // ==========================================
+        function abrirFormularioFeedbackMasp() {
+            const baseUrl = "https://docs.google.com/forms/d/e/1FAIpQLSc4qDbw38kp5I5DKDXM8EF-DoH4QcBI8dEdJ3K60aIRsRDLXA/viewform";
+            const entryId = "entry.675421179"; // Tu ID exacto
+            const vistaCodificada = encodeURIComponent(vistaMaspActual);
+            
+            const urlFinal = `${baseUrl}?usp=pp_url&${entryId}=${vistaCodificada}`;
+            window.open(urlFinal, '_blank');
+        }
+    </script>
+</body>
+</html>
