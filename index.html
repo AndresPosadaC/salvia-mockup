@@ -611,6 +611,11 @@
             <header class="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-8 shrink-0">
                 <div id="view-title" class="text-lg font-semibold text-slate-700">Panel de Control Estratégico</div>
                 <div class="flex items-center gap-4">
+                    
+                    <button type="button" onclick="toggleAsistenteVoz()" id="btn-audio-dash" class="bg-indigo-50 hover:bg-indigo-100 text-indigo-700 p-2 rounded-full transition focus:ring-2 focus:ring-indigo-500 outline-none" title="Activar Asistente de Voz">
+                        <i class="fa-solid fa-ear-listen text-lg"></i>
+                    </button>
+
                     <span class="text-xs text-slate-500 italic"><i class="fa-solid fa-clock mr-1"></i> Sesión Activa</span>
                     <button onclick="toggleDesignControls()" class="bg-indigo-50 text-indigo-700 px-3 py-1.5 rounded-md text-sm font-medium hover:bg-indigo-100 transition-colors">
                         <i class="fa-solid fa-pen-nib mr-1"></i> Modo Comentarios
@@ -701,96 +706,216 @@
                 </div>
 
                 <div id="view-tamizaje" class="hidden fade-in grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    
                     <div class="lg:col-span-2 space-y-6">
                         <div class="bg-white p-8 rounded-xl shadow-sm border border-slate-200">
-                            <h3 class="text-xl font-bold text-slate-800 mb-6">Instrumento de Valoración de Riesgo de Feminicidio</h3>
+                            <h3 class="text-xl font-bold text-slate-800 mb-2">Valoración Técnica de Riesgo: Enfoque Psicológico</h3>
+                            <p class="text-sm text-slate-500 mb-6 pb-4 border-b">Evaluación de indicadores de control coercitivo, manipulación y gaslighting.</p>
+                            
                             <div class="space-y-6">
-                                <div class="p-4 bg-slate-50 rounded-lg border-l-4 border-indigo-500">
-                                    <p class="text-sm font-semibold text-slate-700 mb-2">1. ¿El agresor ha amenazado con matarla a usted o a sus hijos?</p>
-                                    <div class="flex gap-4">
-                                        <label class="flex items-center gap-2 cursor-pointer"><input type="radio" name="q1" value="5" class="risk-calc"> Si</label>
-                                        <label class="flex items-center gap-2 cursor-pointer"><input type="radio" name="q1" value="0" class="risk-calc" checked> No</label>
+                                <div class="p-4 bg-slate-50 rounded-lg border-l-4 border-purple-500 hover:bg-purple-50 transition-colors">
+                                    <p class="text-sm font-semibold text-slate-700 mb-1">1. Distorsión de la realidad (Gaslighting)</p>
+                                    <p class="text-xs text-slate-500 mb-3 italic">"¿Con frecuencia usted termina pidiendo perdón después de una discusión, o llega a dudar de su propia memoria porque él le dice que usted está 'loca' o que las cosas no pasaron como usted recuerda?"</p>
+                                    <div class="flex gap-4 mt-2">
+                                        <label class="flex items-center gap-2 cursor-pointer text-sm font-medium"><input type="radio" name="q1" value="4" class="risk-calc"> Sí, me pasa seguido</label>
+                                        <label class="flex items-center gap-2 cursor-pointer text-sm font-medium"><input type="radio" name="q1" value="0" class="risk-calc" checked> No</label>
                                     </div>
                                 </div>
-                                <div class="p-4 bg-slate-50 rounded-lg border-l-4 border-indigo-500">
-                                    <p class="text-sm font-semibold text-slate-700 mb-2">2. ¿Existe presencia de armas de fuego en el hogar o acceso a ellas?</p>
-                                    <div class="flex gap-4">
-                                        <label class="flex items-center gap-2 cursor-pointer"><input type="radio" name="q2" value="10" class="risk-calc"> Si</label>
-                                        <label class="flex items-center gap-2 cursor-pointer"><input type="radio" name="q2" value="0" class="risk-calc" checked> No</label>
+
+                                <div class="p-4 bg-slate-50 rounded-lg border-l-4 border-purple-500 hover:bg-purple-50 transition-colors">
+                                    <p class="text-sm font-semibold text-slate-700 mb-1">2. Invalidación Emocional y Humillación</p>
+                                    <p class="text-xs text-slate-500 mb-3 italic">"¿Él suele hacerle comentarios hirientes sobre su cuerpo, su inteligencia o su forma de actuar, y cuando usted se ofende, él minimiza su sentir diciendo que usted 'exagera' o que 'solo era una broma'?"</p>
+                                    <div class="flex gap-4 mt-2">
+                                        <label class="flex items-center gap-2 cursor-pointer text-sm font-medium"><input type="radio" name="q2" value="3" class="risk-calc"> Sí, lo hace</label>
+                                        <label class="flex items-center gap-2 cursor-pointer text-sm font-medium"><input type="radio" name="q2" value="0" class="risk-calc" checked> No</label>
                                     </div>
                                 </div>
-                                <div class="p-4 bg-slate-50 rounded-lg border-l-4 border-indigo-500">
-                                    <p class="text-sm font-semibold text-slate-700 mb-2">3. ¿El agresor consume sustancias habitualmente?</p>
-                                    <div class="flex gap-4">
-                                        <label class="flex items-center gap-2 cursor-pointer"><input type="radio" name="q3" value="3" class="risk-calc"> Si</label>
-                                        <label class="flex items-center gap-2 cursor-pointer"><input type="radio" name="q3" value="0" class="risk-calc" checked> No</label>
+
+                                <div class="p-4 bg-slate-50 rounded-lg border-l-4 border-indigo-500 hover:bg-indigo-50 transition-colors">
+                                    <p class="text-sm font-semibold text-slate-700 mb-1">3. Aislamiento y Prohibición</p>
+                                    <p class="text-xs text-slate-500 mb-3 italic">"¿Siente que cada vez ve menos a sus amistades o familiares porque a él le molesta, le prohíbe verlos, o porque usted prefiere alejarse para evitar tener un problema con él?"</p>
+                                    <div class="flex gap-4 mt-2">
+                                        <label class="flex items-center gap-2 cursor-pointer text-sm font-medium"><input type="radio" name="q3" value="4" class="risk-calc"> Sí, me he aislado</label>
+                                        <label class="flex items-center gap-2 cursor-pointer text-sm font-medium"><input type="radio" name="q3" value="0" class="risk-calc" checked> No</label>
                                     </div>
                                 </div>
+
+                                <div class="p-4 bg-slate-50 rounded-lg border-l-4 border-indigo-500 hover:bg-indigo-50 transition-colors">
+                                    <p class="text-sm font-semibold text-slate-700 mb-1">4. Pérdida de Autodeterminación (Control)</p>
+                                    <p class="text-xs text-slate-500 mb-3 italic">"¿Siente miedo constante al tomar decisiones cotidianas (cómo vestirse, en qué gastar su dinero, o con quién hablar) por temor a la reacción agresiva o manipuladora que él pueda tener?"</p>
+                                    <div class="flex gap-4 mt-2">
+                                        <label class="flex items-center gap-2 cursor-pointer text-sm font-medium"><input type="radio" name="q4" value="4" class="risk-calc"> Sí, mido cada cosa que hago</label>
+                                        <label class="flex items-center gap-2 cursor-pointer text-sm font-medium"><input type="radio" name="q4" value="0" class="risk-calc" checked> No</label>
+                                    </div>
+                                </div>
+
+                                <div class="p-4 bg-red-50 rounded-lg border-l-4 border-red-500 hover:bg-red-100 transition-colors">
+                                    <p class="text-sm font-semibold text-slate-700 mb-1">5. Amenazas e Intimidación</p>
+                                    <p class="text-xs text-slate-500 mb-3 italic">"¿Durante una discusión, él ha destruido objetos que a usted le importan, ha golpeado paredes, o le ha sugerido que 'algo malo podría pasarle' si usted decide dejarlo o actuar por su cuenta?"</p>
+                                    <div class="flex gap-4 mt-2">
+                                        <label class="flex items-center gap-2 cursor-pointer text-sm font-medium text-red-700"><input type="radio" name="q5" value="5" class="risk-calc"> Sí, me ha amenazado o intimidado</label>
+                                        <label class="flex items-center gap-2 cursor-pointer text-sm font-medium"><input type="radio" name="q5" value="0" class="risk-calc" checked> No</label>
+                                    </div>
+                                </div>
+
                             </div>
                         </div>
                     </div>
+
                     <div class="space-y-6">
                         <div class="bg-white p-6 rounded-xl shadow-md border border-slate-200 sticky top-4">
-                            <h4 class="font-bold text-slate-700 mb-4 uppercase text-xs tracking-widest">Motor de Reglas</h4>
-                            <div class="text-center py-8">
-                                <p class="text-sm text-slate-500 mb-1">Puntaje Estimado</p>
+                            <h4 class="font-bold text-slate-700 mb-4 uppercase text-xs tracking-widest flex items-center">
+                                <i class="fa-solid fa-calculator mr-2 text-indigo-500"></i> Motor de Reglas
+                            </h4>
+                            <div id="panel-resultado-psico" class="text-center py-8 focus:outline-none focus:ring-4 focus:ring-indigo-300 rounded-lg" tabindex="0">
+                                <p class="text-sm text-slate-500 mb-1">Puntaje Psicosocial Estimado</p>
                                 <div id="risk-score" class="text-6xl font-black text-slate-800 transition-colors">0</div>
-                                <div id="risk-badge" class="mt-4 inline-block px-4 py-1.5 rounded-full bg-slate-100 text-slate-600 font-bold text-sm transition-colors">RIESGO BAJO</div>
+                                <div id="risk-badge" class="mt-4 inline-block px-4 py-1.5 rounded-full bg-slate-100 text-slate-600 font-bold text-sm transition-colors text-center leading-tight">RIESGO BAJO</div>
+                            </div>
+                            <div class="mt-6 pt-4 border-t border-slate-100 text-xs text-slate-500">
+                                <p><i class="fa-solid fa-circle-info text-blue-500 mr-1"></i> El sistema sumará automáticamente los indicadores ocultos de la usuaria. >15 puntos genera Alerta Vital.</p>
                             </div>
                         </div>
                     </div>
+
                 </div>
 
-                <div id="view-masp" class="hidden fade-in flex flex-col md:flex-row items-center justify-around py-10 gap-8">
-                    <div class="max-w-md">
-                        <h2 class="text-3xl font-bold text-slate-800 mb-4">Módulo MASP</h2>
-                        <p class="text-slate-600 mb-6">Diseño específico para Mujeres en Actividades Sexuales Pagas. Botón de pánico integrado con bandeja de operadores 155.</p>
-                        <ul class="space-y-4">
-                            <li class="flex gap-3 items-start text-sm"><i class="fa-solid fa-check-circle text-green-500 mt-1"></i> Botón de Pánico oculto (Safe Mode)</li>
-                            <li class="flex gap-3 items-start text-sm"><i class="fa-solid fa-check-circle text-green-500 mt-1"></i> Enrutamiento por Geolocalización</li>
-                        </ul>
+                <div id="view-masp" class="hidden fade-in flex flex-col md:flex-row items-center justify-around py-12 gap-8">
+                    <div class="max-w-xl">
+                        <div class="inline-block bg-purple-100 text-[#380E44] px-3 py-1 rounded-full font-bold text-xs mb-4">FASE 3 DEL PROYECTO</div>
+                        <h2 class="text-3xl font-bold text-slate-800 mb-4">Ecosistema Móvil MASP</h2>
+                        <p class="text-slate-600 mb-6 leading-relaxed">
+                            La aplicación móvil es un desarrollo nativo independiente (iOS/Android) enfocado en la seguridad, discreción y respuesta inmediata para las usuarias. Requiere su propio entorno interactivo.
+                        </p>
+                        
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+                            <div class="bg-slate-50 p-4 rounded-lg border border-slate-200">
+                                <i class="fa-solid fa-fingerprint text-indigo-500 mb-2 text-xl"></i>
+                                <h4 class="font-bold text-sm text-slate-800">Acceso Inmediato</h4>
+                                <p class="text-xs text-slate-500">Registro social y persistencia con biometría (FaceID/Huella).</p>
+                            </div>
+                            <div class="bg-slate-50 p-4 rounded-lg border border-slate-200">
+                                <i class="fa-solid fa-bolt text-red-500 mb-2 text-xl"></i>
+                                <h4 class="font-bold text-sm text-slate-800">Botón de Pánico</h4>
+                                <p class="text-xs text-slate-500">Alerta georreferenciada directa a la Línea 155.</p>
+                            </div>
+                            <div class="bg-slate-50 p-4 rounded-lg border border-slate-200">
+                                <i class="fa-solid fa-users-rays text-purple-500 mb-2 text-xl"></i>
+                                <h4 class="font-bold text-sm text-slate-800">Red Anónima</h4>
+                                <p class="text-xs text-slate-500">Comunidad de apoyo tipo microblogging seguro y cifrado.</p>
+                            </div>
+                            <div class="bg-slate-50 p-4 rounded-lg border border-slate-200">
+                                <i class="fa-solid fa-clipboard-list text-teal-500 mb-2 text-xl"></i>
+                                <h4 class="font-bold text-sm text-slate-800">Autogestión</h4>
+                                <p class="text-xs text-slate-500">Trazabilidad de casos y tamizajes rápidos desde el celular.</p>
+                            </div>
+                        </div>
+
+                        <a href="./masp_app.html" target="_blank" class="inline-flex items-center justify-center bg-[#380E44] text-white font-bold py-3 px-6 rounded-lg shadow-lg hover:bg-purple-900 transition-all transform hover:scale-105">
+                            Abrir Mockup de App Móvil <i class="fa-solid fa-arrow-up-right-from-square ml-3"></i>
+                        </a>
+                        <p class="text-xs text-slate-400 mt-3"><i class="fa-solid fa-info-circle mr-1"></i> El enlace abrirá una nueva pestaña (masp_app.html).</p>
                     </div>
-                    <div class="mobile-frame shadow-2xl">
-                        <div class="h-6 bg-slate-100 flex justify-between px-6 pt-1 text-[10px]">
-                            <span>9:41</span>
-                            <div class="flex gap-1 items-center"><i class="fa-solid fa-signal"></i><i class="fa-solid fa-wifi"></i><i class="fa-solid fa-battery-full"></i></div>
+                    
+                    <div class="hidden lg:flex justify-center items-center opacity-90">
+                        <div class="w-64 h-[500px] bg-slate-800 rounded-[3rem] border-[8px] border-slate-900 shadow-2xl relative overflow-hidden flex flex-col items-center justify-center text-center p-6">
+                            <i class="fa-brands fa-apple text-slate-500 text-4xl mb-4"></i>
+                            <i class="fa-brands fa-google-play text-slate-500 text-3xl mb-8"></i>
+                            <p class="text-slate-400 text-sm font-medium">Disponible en tiendas<br>de aplicaciones</p>
                         </div>
-                        <div class="p-6">
-                            <div class="flex justify-between items-center mb-8">
-                                <h4 class="font-bold text-xl text-purple-700">App MASP</h4>
-                                <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center"><i class="fa-solid fa-user"></i></div>
-                            </div>
-                            <div class="bg-red-500 text-white p-6 rounded-2xl text-center shadow-lg active:scale-95 transition-transform cursor-pointer" onclick="alert('Alerta enviada a Salvia')">
-                                <i class="fa-solid fa-bolt-lightning text-3xl mb-2"></i>
-                                <p class="font-black text-sm uppercase">Reporte de Emergencia</p>
-                                <p class="text-[10px] opacity-80">Presione 3 segundos</p>
-                            </div>
-                        </div>
-                        <div class="absolute bottom-2 left-1/2 -translate-x-1/2 w-32 h-1 bg-slate-300 rounded-full"></div>
                     </div>
                 </div>
 
                 <div id="view-lgbtiq" class="hidden fade-in space-y-8">
+                    
                     <div class="max-w-3xl">
                         <h2 class="text-2xl font-bold text-slate-800 mb-2">Atención Diferencial: Población LGBTIQ+</h2>
-                        <p class="text-slate-500">Módulo especializado para la captura de variables de identidad y violencia por prejuicio.</p>
+                        <p class="text-slate-500">Módulo especializado para la captura de variables de identidad y valoración de riesgo por violencia por prejuicio.</p>
                     </div>
-                    <div class="bg-white p-8 rounded-2xl border border-slate-200">
+
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                        <h3 class="font-bold text-slate-700 mb-4 border-b pb-2"><i class="fa-solid fa-address-card mr-2 text-pink-600"></i> Identidad y Orientación</h3>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                             <div>
                                 <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Identidad de Género</label>
-                                <select class="w-full p-2.5 bg-slate-50 border rounded-lg text-sm">
-                                    <option>Mujer Trans</option><option>Hombre Trans</option><option>No Binario</option><option>Cisgénero</option>
+                                <select class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-pink-500">
+                                    <option>Seleccione...</option><option>Mujer Trans</option><option>Hombre Trans</option><option>No Binario</option><option>Género Fluido</option><option>Cisgénero</option>
                                 </select>
                             </div>
                             <div>
                                 <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Orientación Sexual</label>
-                                <select class="w-full p-2.5 bg-slate-50 border rounded-lg text-sm">
-                                    <option>Lesbiana</option><option>Gay</option><option>Bisexual</option>
+                                <select class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-pink-500">
+                                    <option>Seleccione...</option><option>Lesbiana</option><option>Gay</option><option>Bisexual</option><option>Pansexual</option><option>Asexual</option>
                                 </select>
                             </div>
                         </div>
                     </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        <div class="lg:col-span-2 space-y-6">
+                            <div class="bg-white p-8 rounded-xl shadow-sm border border-slate-200">
+                                <h3 class="text-xl font-bold text-slate-800 mb-2">Valoración de Riesgo por Prejuicio</h3>
+                                <p class="text-sm text-slate-500 mb-6 pb-4 border-b">Evaluación de violencias en el entorno familiar, laboral y social.</p>
+                                
+                                <div class="space-y-6">
+                                    
+                                    <div class="p-4 bg-slate-50 rounded-lg border-l-4 border-pink-500 hover:bg-pink-50 transition-colors">
+                                        <p class="text-sm font-semibold text-slate-700 mb-1">1. Negación de Identidad e Invalidación</p>
+                                        <p class="text-xs text-slate-500 mb-3 italic">"¿En su entorno (familia, trabajo) le obligan a comportarse o vestirse de una forma que no corresponde con su identidad, o se niegan sistemáticamente a usar su nombre identitario para humillarle?"</p>
+                                        <div class="flex gap-4 mt-2">
+                                            <label class="flex items-center gap-2 cursor-pointer text-sm font-medium"><input type="radio" name="lgb1" value="3" class="risk-calc-lgb"> Sí, me obligan a ocultarme</label>
+                                            <label class="flex items-center gap-2 cursor-pointer text-sm font-medium"><input type="radio" name="lgb1" value="0" class="risk-calc-lgb" checked> No</label>
+                                        </div>
+                                    </div>
+
+                                    <div class="p-4 bg-slate-50 rounded-lg border-l-4 border-pink-500 hover:bg-pink-50 transition-colors">
+                                        <p class="text-sm font-semibold text-slate-700 mb-1">2. Chantaje y Exposición Forzada ("Outing")</p>
+                                        <p class="text-xs text-slate-500 mb-3 italic">"¿Alguien (pareja, familiar o jefe) le ha amenazado con revelar su orientación sexual o identidad de género a otras personas con el fin de controlarle, extorsionarle o causarle daño?"</p>
+                                        <div class="flex gap-4 mt-2">
+                                            <label class="flex items-center gap-2 cursor-pointer text-sm font-medium"><input type="radio" name="lgb2" value="4" class="risk-calc-lgb"> Sí, me han amenazado con exponer mi identidad</label>
+                                            <label class="flex items-center gap-2 cursor-pointer text-sm font-medium"><input type="radio" name="lgb2" value="0" class="risk-calc-lgb" checked> No</label>
+                                        </div>
+                                    </div>
+
+                                    <div class="p-4 bg-slate-50 rounded-lg border-l-4 border-orange-500 hover:bg-orange-50 transition-colors">
+                                        <p class="text-sm font-semibold text-slate-700 mb-1">3. Expulsión Familiar y Violencia Económica</p>
+                                        <p class="text-xs text-slate-500 mb-3 italic">"¿Ha sido expulsado/a/e de su vivienda, le han quitado el apoyo económico básico, o su familia le ha aislado de sus amistades y redes de apoyo por el hecho de tener una identidad diversa?"</p>
+                                        <div class="flex gap-4 mt-2">
+                                            <label class="flex items-center gap-2 cursor-pointer text-sm font-medium"><input type="radio" name="lgb3" value="4" class="risk-calc-lgb"> Sí, he sufrido expulsión o bloqueo económico</label>
+                                            <label class="flex items-center gap-2 cursor-pointer text-sm font-medium"><input type="radio" name="lgb3" value="0" class="risk-calc-lgb" checked> No</label>
+                                        </div>
+                                    </div>
+
+                                    <div class="p-4 bg-red-50 rounded-lg border-l-4 border-red-600 hover:bg-red-100 transition-colors">
+                                        <p class="text-sm font-semibold text-slate-700 mb-1">4. Riesgo de Agresión "Correctiva" o Física</p>
+                                        <p class="text-xs text-slate-500 mb-3 italic">"¿Ha recibido amenazas directas, golpizas, o comentarios que sugieran que usted necesita 'ser corregido/a/e' mediante violencia física o violencia sexual por su orientación o identidad?"</p>
+                                        <div class="flex gap-4 mt-2">
+                                            <label class="flex items-center gap-2 cursor-pointer text-sm font-medium text-red-700"><input type="radio" name="lgb4" value="5" class="risk-calc-lgb"> Sí, he recibido amenazas correctivas o físicas</label>
+                                            <label class="flex items-center gap-2 cursor-pointer text-sm font-medium"><input type="radio" name="lgb4" value="0" class="risk-calc-lgb" checked> No</label>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="space-y-6">
+                            <div class="bg-white p-6 rounded-xl shadow-md border border-slate-200 sticky top-4">
+                                <h4 class="font-bold text-slate-700 mb-4 uppercase text-xs tracking-widest flex items-center">
+                                    <i class="fa-solid fa-calculator mr-2 text-pink-600"></i> Alerta por Prejuicio
+                                </h4>
+                                <div id="panel-resultado-lgb" class="text-center py-8 focus:outline-none focus:ring-4 focus:ring-pink-300 rounded-lg" tabindex="0">
+                                    <p class="text-sm text-slate-500 mb-1">Nivel de Vulnerabilidad</p>
+                                    <div id="risk-score-lgb" class="text-6xl font-black text-slate-800 transition-colors">0</div>
+                                    <div id="risk-badge-lgb" class="mt-4 inline-block px-4 py-1.5 rounded-full bg-slate-100 text-slate-600 font-bold text-sm transition-colors text-center leading-tight">BAJA VULNERABILIDAD</div>
+                                </div>
+                                <div class="mt-6 pt-4 border-t border-slate-100 text-xs text-slate-500">
+                                    <p><i class="fa-solid fa-circle-info text-blue-500 mr-1"></i> La violencia por prejuicio requiere enrutamiento especializado. >12 puntos activa protocolo de refugio/emergencia.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
 

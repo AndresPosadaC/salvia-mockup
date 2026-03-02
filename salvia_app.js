@@ -282,14 +282,16 @@ function generarCaptchas() {
 // ==========================================
 function toggleAsistenteVoz() {
     asistenteVozActivo = !asistenteVozActivo;
-    const btn = document.getElementById('btn-audio');
+    const btn1 = document.getElementById('btn-audio'); // Botón público
+    const btn2 = document.getElementById('btn-audio-dash'); // Botón dashboard
+    
     if (asistenteVozActivo) {
-        btn.classList.add('bg-green-500');
-        btn.classList.remove('bg-white/20');
+        if(btn1) { btn1.classList.add('bg-green-500'); btn1.classList.remove('bg-white/20'); }
+        if(btn2) { btn2.classList.add('bg-green-500', 'text-white'); btn2.classList.remove('bg-indigo-50', 'text-indigo-700'); }
         leerTexto("Asistente de voz activado. Navegue por la página usando la tecla Tabulador.");
     } else {
-        btn.classList.remove('bg-green-500');
-        btn.classList.add('bg-white/20');
+        if(btn1) { btn1.classList.remove('bg-green-500'); btn1.classList.add('bg-white/20'); }
+        if(btn2) { btn2.classList.remove('bg-green-500', 'text-white'); btn2.classList.add('bg-indigo-50', 'text-indigo-700'); }
         window.speechSynthesis.cancel();
     }
 }
@@ -310,40 +312,74 @@ document.addEventListener('focusin', function(e) {
     
     // 1. SI ES UN CAMPO DE FORMULARIO
     if (['INPUT', 'SELECT', 'TEXTAREA'].includes(elemento.tagName)) {
-        let textoALeer = "Campo. ";
-        const label = elemento.previousElementSibling;
+        let textoALeer = "";
         
-        if (label && label.tagName === 'LABEL') textoALeer += label.innerText + ". ";
-        
-        if (elemento.tagName === 'SELECT') {
-            const opcionActual = elemento.options[elemento.selectedIndex].text;
-            textoALeer += "Lista desplegable. Use flechas arriba y abajo. Opción actual: " + opcionActual;
-        } else if (elemento.id === 'reporte-captcha') {
-            const sumaTexto = document.getElementById('captcha-text').innerText;
-            textoALeer = "Seguridad. Escriba el resultado de: " + sumaTexto;
-        } else if (elemento.id === 'login-captcha') {
-            const sumaTexto = document.getElementById('login-captcha-text').innerText;
-            textoALeer = "Seguridad. Escriba el resultado de: " + sumaTexto;
-        } else if (elemento.id === 'victima-captcha') {
-            const sumaTexto = document.getElementById('victima-captcha-text').innerText;
-            textoALeer = "Seguridad. Escriba el resultado de: " + sumaTexto;
-        } else {
-            if (elemento.placeholder && elemento.placeholder !== '?') textoALeer += elemento.placeholder;
+        // --- LÓGICA MEJORADA PARA LEER TAMIZAJES (RADIO BUTTONS + PREGUNTA) ---
+        if (elemento.type === 'radio') {
+            const labelPadre = elemento.closest('label');
+            
+            // Buscamos el div contenedor de la pregunta (que tiene la clase p-4)
+            const contenedorPregunta = elemento.closest('.p-4'); 
+            let textoPregunta = "";
+
+            if (contenedorPregunta) {
+                // Extraemos todos los textos de los párrafos (<p>) dentro de ese cuadro
+                const parrafos = contenedorPregunta.querySelectorAll('p');
+                parrafos.forEach(p => {
+                    textoPregunta += p.innerText + ". ";
+                });
+            }
+
+            if (labelPadre) {
+                textoALeer = textoPregunta + " Opción actual: " + labelPadre.innerText.trim() + ". Presione la barra espaciadora para seleccionar.";
+            }
+        } 
+        // --- FIN DE LÓGICA DE RADIO BUTTONS ---
+        else {
+            textoALeer = "Campo. ";
+            const label = elemento.previousElementSibling;
+            
+            if (label && label.tagName === 'LABEL') {
+                textoALeer += label.innerText + ". ";
+            }
+            
+            if (elemento.tagName === 'SELECT') {
+                const opcionActual = elemento.options[elemento.selectedIndex].text;
+                textoALeer += "Lista desplegable. Use flechas arriba y abajo. Opción actual: " + opcionActual;
+            } else if (elemento.id === 'reporte-captcha') {
+                const sumaTexto = document.getElementById('captcha-text').innerText;
+                textoALeer = "Seguridad. Escriba el resultado de: " + sumaTexto;
+            } else if (elemento.id === 'login-captcha') {
+                const sumaTexto = document.getElementById('login-captcha-text').innerText;
+                textoALeer = "Seguridad. Escriba el resultado de: " + sumaTexto;
+            } else if (elemento.id === 'victima-captcha') {
+                const sumaTexto = document.getElementById('victima-captcha-text').innerText;
+                textoALeer = "Seguridad. Escriba el resultado de: " + sumaTexto;
+            } else {
+                if (elemento.placeholder && elemento.placeholder !== '?') textoALeer += elemento.placeholder;
+            }
         }
         
         leerTexto(textoALeer);
     } 
     // 2. SI ES UN BOTÓN
     else if (elemento.tagName === 'BUTTON') {
-        // Extrae el texto visible del botón, o el atributo 'title' si es solo un ícono
         let textoBoton = elemento.innerText.trim() || elemento.title || "sin texto";
-        // Evitamos leer el propio botón de audio cada vez que se tabula sobre él si está vacío
         if(textoBoton !== "") leerTexto("Botón: " + textoBoton);
     } 
     // 3. SI ES UN ENLACE
     else if (elemento.tagName === 'A') {
         let textoEnlace = elemento.innerText.trim();
         if(textoEnlace !== "") leerTexto("Enlace: " + textoEnlace);
+    }
+    // 4. SI ES EL PANEL DE RESULTADOS (NUEVO)
+    else if (elemento.tagName === 'DIV' && (elemento.id === 'panel-resultado-psico' || elemento.id === 'panel-resultado-lgb')) {
+        let titulo = elemento.querySelector('p').innerText;
+        // Buscamos el texto del número y el texto del globo de alerta
+        let puntaje = elemento.querySelector('[id^="risk-score"]').innerText;
+        let nivel = elemento.querySelector('[id^="risk-badge"]').innerText;
+        
+        leerTexto("Resultado del tamizaje. " + titulo + ": " + puntaje + " puntos. Nivel de alerta: " + nivel);
     }
 });
 
@@ -455,6 +491,41 @@ document.querySelectorAll('.risk-calc').forEach(radio => {
         } else {
             scoreDisplay.className = "text-6xl font-black text-slate-800 transition-colors";
             badge.innerText = "RIESGO BAJO";
+            badge.className = "mt-4 inline-block px-4 py-1.5 rounded-full bg-slate-100 text-slate-600 font-bold text-sm";
+        }
+    });
+});
+
+// ==========================================
+// CALCULADOR DE RIESGO LGBTIQ+ (PREJUICIO)
+// ==========================================
+document.querySelectorAll('.risk-calc-lgb').forEach(radio => {
+    radio.addEventListener('change', () => {
+        let totalScore = 0;
+        // Sumar solo los radios seleccionados de la clase lgb
+        document.querySelectorAll('.risk-calc-lgb:checked').forEach(c => totalScore += parseInt(c.value));
+        
+        const scoreDisplay = document.getElementById('risk-score-lgb');
+        const badge = document.getElementById('risk-badge-lgb');
+        
+        scoreDisplay.innerText = totalScore;
+        
+        // Reglas de negocio para LGBTIQ+
+        if(totalScore >= 12) {
+            scoreDisplay.className = "text-6xl font-black text-red-600 transition-colors";
+            badge.innerText = "ALERTA CRÍTICA - RIESGO DE VIDA";
+            badge.className = "mt-4 inline-block px-4 py-1.5 rounded-full bg-red-100 text-red-600 font-bold text-sm animate-bounce";
+        } else if(totalScore >= 6) {
+            scoreDisplay.className = "text-6xl font-black text-orange-500 transition-colors";
+            badge.innerText = "VULNERABILIDAD ALTA - AISLAMIENTO";
+            badge.className = "mt-4 inline-block px-4 py-1.5 rounded-full bg-orange-100 text-orange-700 font-bold text-sm";
+        } else if(totalScore >= 3) {
+            scoreDisplay.className = "text-6xl font-black text-amber-500 transition-colors";
+            badge.innerText = "VULNERABILIDAD MODERADA";
+            badge.className = "mt-4 inline-block px-4 py-1.5 rounded-full bg-amber-100 text-amber-600 font-bold text-sm";
+        } else {
+            scoreDisplay.className = "text-6xl font-black text-slate-800 transition-colors";
+            badge.innerText = "BAJA VULNERABILIDAD";
             badge.className = "mt-4 inline-block px-4 py-1.5 rounded-full bg-slate-100 text-slate-600 font-bold text-sm";
         }
     });
