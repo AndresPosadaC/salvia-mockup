@@ -193,34 +193,50 @@ function ingresarVictima(e) {
 // 5. NAVEGACIÓN DEL DASHBOARD Y BOTONES INFO
 // ==========================================
 function switchDashView(viewId) {
-    const views = ['dashboard', 'seguimiento', 'tamizaje', 'masp', 'lgbtiq'];
+    const views = ['dashboard', 'seguimiento', 'tamizaje', 'masp', 'lgbtiq', 'builder'];
+    
+    // Ocultar todas las vistas de forma segura
     views.forEach(v => {
-        document.getElementById(`view-${v}`).classList.add('hidden');
-        document.getElementById(`nav-${v}`).classList.remove('sidebar-active');
+        const viewEl = document.getElementById(`view-${v}`);
+        const navEl = document.getElementById(`nav-${v}`);
+        if(viewEl) viewEl.classList.add('hidden');
+        if(navEl) navEl.classList.remove('sidebar-active');
     });
-    document.getElementById(`view-${viewId}`).classList.remove('hidden');
-    document.getElementById(`nav-${viewId}`).classList.add('sidebar-active');
 
+    // Mostrar la vista seleccionada de forma segura
+    const activeView = document.getElementById(`view-${viewId}`);
+    const activeNav = document.getElementById(`nav-${viewId}`);
+    if(activeView) activeView.classList.remove('hidden');
+    if(activeNav) activeNav.classList.add('sidebar-active');
+
+    // DICCIONARIO ACTUALIZADO (¡Aquí faltaba el builder!)
     const viewConfig = {
         'dashboard':   { title: 'Panel de Control Estratégico', storyKey: 'panel_control' },
         'seguimiento': { title: 'Monitoreo de Rutas y Barreras', storyKey: 'seguimiento_casos' },
         'tamizaje':    { title: 'Valoración Técnica de Riesgo de Feminicidio', storyKey: 'tamizaje_riesgo' },
         'masp':        { title: 'Mockup Aplicativo MASP', storyKey: 'modulo_masp' },
-        'lgbtiq':      { title: 'Enfoque Diferencial de Género', storyKey: 'modulo_lgbtiq' }
+        'lgbtiq':      { title: 'Enfoque Diferencial de Género', storyKey: 'modulo_lgbtiq' },
+        'builder':     { title: 'Motor de Formularios (EAV)', storyKey: 'motor_formularios' } // <--- SOLUCIÓN
     };
 
     const config = viewConfig[viewId];
-    document.getElementById('view-title').innerHTML = `
-        ${config.title}
-        <button onclick="abrirModalHistoria('${config.storyKey}')" class="ml-4 text-gray-400 hover:text-[#FCCC3C] transition-colors align-middle" title="Ver Historia de Usuario">
-            <i class="fa-solid fa-circle-info text-2xl drop-shadow-sm"></i>
-        </button>
-    `;
-    // Actualizar el rastreador para el Google Form (DASHBOARD)
+    
+    // Paracaídas de seguridad: Solo cambia el título si existe la configuración
+    if (config) {
+        document.getElementById('view-title').innerHTML = `
+            ${config.title}
+            <button onclick="abrirModalHistoria('${config.storyKey}')" class="ml-4 text-gray-400 hover:text-[#FCCC3C] transition-colors align-middle" title="Ver Historia de Usuario">
+                <i class="fa-solid fa-circle-info text-2xl drop-shadow-sm"></i>
+            </button>
+        `;
+    }
+
+    // Actualizar el rastreador para el Google Form
     if(viewId === 'dashboard') vistaActualGlobal = 'Dashboard - Panel de Control';
     else if(viewId === 'seguimiento') vistaActualGlobal = 'Dashboard - Bandeja de Seguimiento';
     else if(viewId === 'tamizaje') vistaActualGlobal = 'Dashboard - Tamizaje de Riesgo';
     else if(viewId === 'masp' || viewId === 'lgbtiq') vistaActualGlobal = 'Dashboard - Módulo MASP / LGBTIQ+';
+    else if(viewId === 'builder') vistaActualGlobal = 'Dashboard - Constructor Dinámico';
 }
 
 // ==========================================
@@ -401,7 +417,7 @@ const userStories = {
         role: 'Equipo Desarrollador', 
         content: `
             <div class="bg-blue-50 p-4 rounded-lg border border-blue-100 mt-2">
-                <h4 class="font-bold text-[#B53D75] mb-3">Versión 2.4 (Actual)</h4>
+                <h4 class="font-bold text-[#B53D75] mb-3">Versión 3.1 (3/3/2026)</h4>
                 <ul class="space-y-3">
                     <li class="flex items-start">
                         <span class="bg-[#B53D75] text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold mr-3 shrink-0 mt-0.5">1</span> 
@@ -418,6 +434,14 @@ const userStories = {
                     <li class="flex items-start">
                         <span class="bg-[#B53D75] text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold mr-3 shrink-0 mt-0.5">4</span> 
                         <span>Acceso a Módulo MASP - App Mobil SALVIA.</span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="bg-[#B53D75] text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold mr-3 shrink-0 mt-0.5">5</span> 
+                        <span>Constructor SuperAdmin</span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="bg-[#B53D75] text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold mr-3 shrink-0 mt-0.5">6</span> 
+                        <span>Front similar al original</span>
                     </li>
                 </ul>
             </div>
@@ -459,8 +483,9 @@ const userStories = {
     'seguimiento_casos': { title: 'Monitoreo de Rutas', role: 'Gestora de Caso / Agente Integral / Territorial / SALVIA Nacional', content: '"Como operador, quiero ver una bandeja de entrada con los casos recién reportados, ordenados por urgencia y semaforizados, para poder iniciar el contacto de manera prioritaria y activar la ruta institucional."' },
     'tamizaje_riesgo': { title: 'Valoración Técnica de Riesgo', role: 'Equipo Psicosocial / Comisaría', content: '"Como profesional en la ruta, necesito aplicar un cuestionario estandarizado que calcule automáticamente el riesgo de feminicidio, para clasificar el nivel de alerta (Extremo, Moderado, Bajo) y justificar medidas de protección."' },
     'modulo_masp': { title: 'Módulo MASP', role: 'Mujeres en Actividades Sexuales Pagas', content: '"Como usuaria del ecosistema MASP, necesito contar con un botón de pánico y un canal de reporte discreto que me permita alertar a las autoridades si me encuentro en una situación de violencia en mi entorno laboral."' },
-    'modulo_lgbtiq': { title: 'Enfoque Diferencial de Género', role: 'Analista de Casos', content: '"Como analista, necesito visualizar indicadores y variables específicas de identidad de género y orientación sexual, para garantizar que la atención cumpla con el enfoque diferencial y no revictimice a la población diversa."' }
-};
+    'modulo_lgbtiq': { title: 'Enfoque Diferencial de Género', role: 'Analista de Casos', content: '"Como analista, necesito visualizar indicadores y variables específicas de identidad de género y orientación sexual, para garantizar que la atención cumpla con el enfoque diferencial y no revictimice a la población diversa."' },
+    'motor_formularios': { title: 'Dinamismo a preguntas relacionadas', role: 'Superuser', content: '"Como super usuario, quiero crear un diccionario dinámico donde pueda definir: la pregunta, el tipo (texto, select, radio) y las reglas de dependencia entre pregunas"' }
+}; 
 
 function abrirModalHistoria(storyKey) {
     const story = userStories[storyKey];
@@ -555,10 +580,148 @@ function abrirFormularioFeedback() {
 }
 
 // ==========================================
-// INICIALIZADOR GENERAL
+// 12. MOTOR EAV (CONSTRUCTOR DE FORMULARIOS v3.0)
+// ==========================================
+
+// Esquema de Base de Datos Dinámica con Árbol de Decisión
+let esquemaDinamico = [
+    // --- SECCIÓN 1: DATOS (CLON UI CLIENTE) ---
+    { id: 'sec_datos', type: 'section', label: 'Datos Personales', icon: 'fa-users' },
+    { id: 'nombres', label: 'Nombres', type: 'text', placeholder: 'Escriba su nombre completo', colSpan: 1 },
+    { id: 'apellidos', label: 'Apellidos', type: 'text', placeholder: 'Escriba sus apellidos', colSpan: 1 },
+    { id: 'nombre_identitario', label: 'Nombre identitario', type: 'text', placeholder: 'Si cuenta con un nombre diferente...', colSpan: 1 },
+    { id: 'fecha_nac', label: 'Fecha de nacimiento', type: 'date', placeholder: 'dd/mm/aaaa', colSpan: 1 },
+    
+    // --- SECCIÓN 2: HECHOS ---
+    { id: 'sec_hechos', type: 'section', label: 'Descripción de los hechos', icon: 'fa-file-lines' },
+    { id: 'descripcion', label: 'Detalle de lo ocurrido', type: 'textarea', placeholder: 'Escriba aquí todo lo que considere relevante...', colSpan: 4 },
+    
+    // --- SECCIÓN 3: ÁRBOL DE TAMIZAJE PSICOSOCIAL ---
+    { id: 'sec_tamizaje', type: 'section', label: 'Tamizaje Psicológico (Árbol Dinámico)', icon: 'fa-brain' },
+    
+    // Nivel 1 (Raíz)
+    { id: 'q_control', label: '1. Pérdida de Autodeterminación (Control)', type: 'select', options: ['Seleccione...', 'Sí', 'No'], colSpan: 2 },
+    
+    // Ramas de Nivel 2 (Dependen de Nivel 1)
+    { id: 'q_aislamiento', label: '2. Aislamiento y Prohibición', type: 'select', options: ['Seleccione...', 'Sí', 'No'], colSpan: 2, 
+      dependsOn: { field: 'q_control', value: 'Sí' } },
+      
+    { id: 'q_gaslighting', label: '2. Distorsión de la realidad (Gaslighting)', type: 'select', options: ['Seleccione...', 'Sí', 'No'], colSpan: 2, 
+      dependsOn: { field: 'q_control', value: 'No' } },
+      
+    // Rama de Nivel 3 (Depende de Nivel 2)
+    { id: 'q_invalidacion', label: '3. Invalidación Emocional y Humillación', type: 'select', options: ['Seleccione...', 'Sí', 'No'], colSpan: 2, 
+      dependsOn: { field: 'q_gaslighting', value: 'Sí' } },
+      
+    // Rama de Nivel 4 (Depende de Nivel 3)
+    { id: 'q_amenazas', label: '4. Amenazas e Intimidación', type: 'select', options: ['Seleccione...', 'Sí', 'No'], colSpan: 2, 
+      dependsOn: { field: 'q_invalidacion', value: 'Sí' } }
+];
+
+// Función PRINCIPAL para dibujar el formulario en pantalla
+function renderizarFormularioDinamico() {
+    const contenedor = document.getElementById('dynamic-form-preview');
+    if (!contenedor) return;
+    
+    contenedor.className = "grid grid-cols-1 md:grid-cols-4 gap-x-4 gap-y-5 pb-10";
+    contenedor.innerHTML = ''; 
+    
+    esquemaDinamico.forEach(campo => {
+        const div = document.createElement('div');
+        div.id = `wrapper_${campo.id}`;
+        div.className = "slide-in";
+        if (campo.dependsOn) div.style.display = 'none';
+
+        if (campo.type === 'section') {
+            // USANDO LA NUEVA CLASE CSS
+            div.className = "col-span-1 md:col-span-4 client-section-header";
+            div.innerHTML = `<i class="fa-solid ${campo.icon}"></i><h2>${campo.label}</h2>`;
+        } else {
+            const colSpanClass = campo.colSpan === 4 ? 'md:col-span-4' : campo.colSpan === 2 ? 'md:col-span-2' : 'md:col-span-1';
+            div.classList.add(colSpanClass);
+
+            // USANDO LAS NUEVAS CLASES CSS PARA LABELS E INPUTS
+            const label = `<label class="client-input-label">${campo.label}</label>`;
+            const inputClass = "client-input-field"; 
+            let inputHTML = '';
+
+            if (campo.type === 'text' || campo.type === 'date') {
+                inputHTML = `<input type="${campo.type}" id="${campo.id}" class="${inputClass}" placeholder="${campo.placeholder || ''}">`;
+            } else if (campo.type === 'textarea') {
+                inputHTML = `<textarea id="${campo.id}" rows="3" class="${inputClass}" placeholder="${campo.placeholder || ''}"></textarea>`;
+            } else if (campo.type === 'select') {
+                let optionsHTML = campo.options.map(opt => `<option value="${opt}">${opt}</option>`).join('');
+                inputHTML = `<select id="${campo.id}" onchange="evaluarDependencias()" class="${inputClass}">${optionsHTML}</select>`;
+            }
+            
+            div.innerHTML = label + inputHTML;
+        }
+        contenedor.appendChild(div);
+    });
+
+    const btnContainer = document.createElement('div');
+    btnContainer.className = "col-span-1 md:col-span-4 flex justify-center mt-6";
+    // USANDO LA NUEVA CLASE DEL BOTÓN VERDE
+    btnContainer.innerHTML = `<button type="button" class="client-btn-success">Guardar y Continuar</button>`;
+    contenedor.appendChild(btnContainer);
+
+    document.getElementById('json-preview').innerText = JSON.stringify(esquemaDinamico, null, 2);
+    evaluarDependencias();
+}
+
+// LÓGICA DE CASCADA (El Efecto Dominó)
+function evaluarDependencias() {
+    let huboCambios = false;
+
+    esquemaDinamico.forEach(campo => {
+        if (campo.dependsOn) {
+            const campoPadre = document.getElementById(campo.dependsOn.field);
+            const wrapperPropio = document.getElementById(`wrapper_${campo.id}`);
+            const wrapperPadre = document.getElementById(`wrapper_${campo.dependsOn.field}`);
+            
+            // El padre debe estar visible. Si el padre está oculto, el hijo NO debe aparecer.
+            const padreEstaVisible = wrapperPadre ? wrapperPadre.style.display !== 'none' : true;
+            
+            if (campoPadre && padreEstaVisible && campoPadre.value === campo.dependsOn.value) {
+                if (wrapperPropio.style.display === 'none') {
+                    wrapperPropio.style.display = 'block';
+                    huboCambios = true;
+                }
+            } else {
+                if (wrapperPropio.style.display !== 'none') {
+                    wrapperPropio.style.display = 'none'; // Ocultar
+                    
+                    // Limpiar el valor para no dejar basura en la BD
+                    const inputPropio = document.getElementById(campo.id);
+                    if(inputPropio) {
+                        if(inputPropio.tagName === 'SELECT') inputPropio.selectedIndex = 0;
+                        else inputPropio.value = '';
+                    }
+                    huboCambios = true; 
+                }
+            }
+        }
+    });
+
+    // Recursividad para la cascada
+    if (huboCambios) {
+        evaluarDependencias();
+    }
+}
+
+function agregarCampoPrueba() {
+    alert("El árbol de dependencias completo ya está cargado en el JSON inicial. ¡Pruébelo en la vista previa!");
+}
+
+// ==========================================
+// INICIALIZADOR GENERAL (Unificado)
 // ==========================================
 document.addEventListener('DOMContentLoaded', () => {
+    // Funciones previas (Portal Público)
     navPublic('home-view');
     cargarCacheAlInicio(); 
     generarCaptchas();
+    
+    // Iniciar Motor EAV (Constructor)
+    renderizarFormularioDinamico();
 });
