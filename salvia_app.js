@@ -580,148 +580,130 @@ function abrirFormularioFeedback() {
 }
 
 // ==========================================
-// 12. MOTOR EAV (CONSTRUCTOR DE FORMULARIOS v3.0)
+// 12. MOTOR EAV AVANZADO (GRAFO ACÍCLICO DIRIGIDO - DAG)
 // ==========================================
 
-// Esquema de Base de Datos Dinámica con Árbol de Decisión
-let esquemaDinamico = [
-    // --- SECCIÓN 1: DATOS (CLON UI CLIENTE) ---
-    { id: 'sec_datos', type: 'section', label: 'Datos Personales', icon: 'fa-users' },
-    { id: 'nombres', label: 'Nombres', type: 'text', placeholder: 'Escriba su nombre completo', colSpan: 1 },
-    { id: 'apellidos', label: 'Apellidos', type: 'text', placeholder: 'Escriba sus apellidos', colSpan: 1 },
-    { id: 'nombre_identitario', label: 'Nombre identitario', type: 'text', placeholder: 'Si cuenta con un nombre diferente...', colSpan: 1 },
-    { id: 'fecha_nac', label: 'Fecha de nacimiento', type: 'date', placeholder: 'dd/mm/aaaa', colSpan: 1 },
-    
-    // --- SECCIÓN 2: HECHOS ---
-    { id: 'sec_hechos', type: 'section', label: 'Descripción de los hechos', icon: 'fa-file-lines' },
-    { id: 'descripcion', label: 'Detalle de lo ocurrido', type: 'textarea', placeholder: 'Escriba aquí todo lo que considere relevante...', colSpan: 4 },
-    
-    // --- SECCIÓN 3: ÁRBOL DE TAMIZAJE PSICOSOCIAL ---
-    { id: 'sec_tamizaje', type: 'section', label: 'Tamizaje Psicológico (Árbol Dinámico)', icon: 'fa-brain' },
-    
-    // Nivel 1 (Raíz)
-    { id: 'q_control', label: '1. Pérdida de Autodeterminación (Control)', type: 'select', options: ['Seleccione...', 'Sí', 'No'], colSpan: 2 },
-    
-    // Ramas de Nivel 2 (Dependen de Nivel 1)
-    { id: 'q_aislamiento', label: '2. Aislamiento y Prohibición', type: 'select', options: ['Seleccione...', 'Sí', 'No'], colSpan: 2, 
-      dependsOn: { field: 'q_control', value: 'Sí' } },
-      
-    { id: 'q_gaslighting', label: '2. Distorsión de la realidad (Gaslighting)', type: 'select', options: ['Seleccione...', 'Sí', 'No'], colSpan: 2, 
-      dependsOn: { field: 'q_control', value: 'No' } },
-      
-    // Rama de Nivel 3 (Depende de Nivel 2)
-    { id: 'q_invalidacion', label: '3. Invalidación Emocional y Humillación', type: 'select', options: ['Seleccione...', 'Sí', 'No'], colSpan: 2, 
-      dependsOn: { field: 'q_gaslighting', value: 'Sí' } },
-      
-    // Rama de Nivel 4 (Depende de Nivel 3)
-    { id: 'q_amenazas', label: '4. Amenazas e Intimidación', type: 'select', options: ['Seleccione...', 'Sí', 'No'], colSpan: 2, 
-      dependsOn: { field: 'q_invalidacion', value: 'Sí' } }
-];
-
-// Función PRINCIPAL para dibujar el formulario en pantalla
 function renderizarFormularioDinamico() {
     const contenedor = document.getElementById('dynamic-form-preview');
     if (!contenedor) return;
     
+    // Configuramos el Grid responsivo
     contenedor.className = "grid grid-cols-1 md:grid-cols-4 gap-x-4 gap-y-5 pb-10";
     contenedor.innerHTML = ''; 
     
-    esquemaDinamico.forEach(campo => {
+    // 1. Dibujar TODAS las preguntas del diccionario (Ocultas por defecto)
+    Object.keys(dicPreguntas).forEach(codigo => {
+        const campo = dicPreguntas[codigo];
+        
         const div = document.createElement('div');
-        div.id = `wrapper_${campo.id}`;
-        div.className = "slide-in";
-        if (campo.dependsOn) div.style.display = 'none';
+        div.id = `wrapper_${codigo}`;
+        div.className = "slide-in hidden"; // Oculto al nacer
+        
+        const colSpanClass = campo.colSpan === 4 ? 'md:col-span-4' : campo.colSpan === 2 ? 'md:col-span-2' : 'md:col-span-1';
+        div.classList.add(colSpanClass);
 
-        if (campo.type === 'section') {
-            // USANDO LA NUEVA CLASE CSS
-            div.className = "col-span-1 md:col-span-4 client-section-header";
-            div.innerHTML = `<i class="fa-solid ${campo.icon}"></i><h2>${campo.label}</h2>`;
-        } else {
-            const colSpanClass = campo.colSpan === 4 ? 'md:col-span-4' : campo.colSpan === 2 ? 'md:col-span-2' : 'md:col-span-1';
-            div.classList.add(colSpanClass);
+        const label = `<label class="client-input-label">${campo.label}</label>`;
+        const inputClass = "client-input-field";
+        let inputHTML = '';
 
-            // USANDO LAS NUEVAS CLASES CSS PARA LABELS E INPUTS
-            const label = `<label class="client-input-label">${campo.label}</label>`;
-            const inputClass = "client-input-field"; 
-            let inputHTML = '';
-
-            if (campo.type === 'text' || campo.type === 'date') {
-                inputHTML = `<input type="${campo.type}" id="${campo.id}" class="${inputClass}" placeholder="${campo.placeholder || ''}">`;
-            } else if (campo.type === 'textarea') {
-                inputHTML = `<textarea id="${campo.id}" rows="3" class="${inputClass}" placeholder="${campo.placeholder || ''}"></textarea>`;
-            } else if (campo.type === 'select') {
-                let optionsHTML = campo.options.map(opt => `<option value="${opt}">${opt}</option>`).join('');
-                inputHTML = `<select id="${campo.id}" onchange="evaluarDependencias()" class="${inputClass}">${optionsHTML}</select>`;
-            }
-            
-            div.innerHTML = label + inputHTML;
+        if (campo.type === 'text' || campo.type === 'number') {
+            inputHTML = `<input type="${campo.type}" id="${codigo}" class="${inputClass}" onchange="evaluarDAG()">`;
+        } else if (campo.type === 'textarea') {
+            inputHTML = `<textarea id="${codigo}" rows="3" class="${inputClass}" onchange="evaluarDAG()"></textarea>`;
+        } else if (campo.type === 'boolean') {
+            // El usuario ve "Sí/No", pero el sistema lee "true/false" o ""
+            inputHTML = `
+                <select id="${codigo}" onchange="evaluarDAG()" class="${inputClass}">
+                    <option value="">Seleccione...</option>
+                    <option value="true">Sí</option>
+                    <option value="false">No</option>
+                </select>`;
         }
+        
+        div.innerHTML = label + inputHTML;
         contenedor.appendChild(div);
     });
 
     const btnContainer = document.createElement('div');
     btnContainer.className = "col-span-1 md:col-span-4 flex justify-center mt-6";
-    // USANDO LA NUEVA CLASE DEL BOTÓN VERDE
-    btnContainer.innerHTML = `<button type="button" class="client-btn-success">Guardar y Continuar</button>`;
+    btnContainer.innerHTML = `<button type="button" class="client-btn-success shadow-md text-sm py-3 px-10">Guardar y Continuar</button>`;
     contenedor.appendChild(btnContainer);
 
-    document.getElementById('json-preview').innerText = JSON.stringify(esquemaDinamico, null, 2);
-    evaluarDependencias();
+    // Mostramos el código DAG en el panel negro para el Superusuario
+    const vistaCodigo = `// DICCIONARIO\n${JSON.stringify(dicPreguntas, null, 2)}\n\n// ÁRBOL DAG\n${JSON.stringify(arbolRelaciones, null, 2)}`;
+    const previewBox = document.getElementById('json-preview');
+    if(previewBox) previewBox.innerText = vistaCodigo;
+    
+    // Arrancar el motor evaluando las raíces
+    evaluarDAG();
 }
 
-// LÓGICA DE CASCADA (El Efecto Dominó)
-function evaluarDependencias() {
-    let huboCambios = false;
+// EL ALGORITMO RECURSIVO DEL GRAFO (Traverse)
+function evaluarDAG() {
+    let nodosVisibles = new Set();
 
-    esquemaDinamico.forEach(campo => {
-        if (campo.dependsOn) {
-            const campoPadre = document.getElementById(campo.dependsOn.field);
-            const wrapperPropio = document.getElementById(`wrapper_${campo.id}`);
-            const wrapperPadre = document.getElementById(`wrapper_${campo.dependsOn.field}`);
+    // Las raíces siempre están visibles
+    if(arbolRelaciones["raices_tamizaje"]) {
+        arbolRelaciones["raices_tamizaje"].forEach(codigo => nodosVisibles.add(codigo));
+    }
+
+    let cola = [...nodosVisibles];
+    
+    while(cola.length > 0) {
+        let codigoActual = cola.shift();
+        const inputActual = document.getElementById(codigoActual);
+        
+        if (arbolRelaciones[codigoActual] && inputActual) {
+            const valorActual = inputActual.value; 
             
-            // El padre debe estar visible. Si el padre está oculto, el hijo NO debe aparecer.
-            const padreEstaVisible = wrapperPadre ? wrapperPadre.style.display !== 'none' : true;
-            
-            if (campoPadre && padreEstaVisible && campoPadre.value === campo.dependsOn.value) {
-                if (wrapperPropio.style.display === 'none') {
-                    wrapperPropio.style.display = 'block';
-                    huboCambios = true;
-                }
-            } else {
-                if (wrapperPropio.style.display !== 'none') {
-                    wrapperPropio.style.display = 'none'; // Ocultar
+            if (arbolRelaciones[codigoActual][valorActual]) {
+                let hijosAAgregar = arbolRelaciones[codigoActual][valorActual];
+                
+                hijosAAgregar.forEach(hijo => {
+                    let nivelPadre = parseInt(codigoActual.substring(1,2));
+                    let nivelHijo = parseInt(hijo.substring(1,2));
                     
-                    // Limpiar el valor para no dejar basura en la BD
-                    const inputPropio = document.getElementById(campo.id);
-                    if(inputPropio) {
-                        if(inputPropio.tagName === 'SELECT') inputPropio.selectedIndex = 0;
-                        else inputPropio.value = '';
+                    if (nivelHijo <= nivelPadre && codigoActual[0] === hijo[0]) {
+                        console.error(`🚨 ALERTA DE LOOP BLOQUEADO: El nodo ${codigoActual} intentó llamar a un nivel igual o inferior (${hijo}).`);
+                    } else {
+                        nodosVisibles.add(hijo);
+                        cola.push(hijo); 
                     }
-                    huboCambios = true; 
-                }
+                });
+            }
+        }
+    }
+
+    // Actualizar la Interfaz Gráfica (DOM)
+    Object.keys(dicPreguntas).forEach(codigo => {
+        const wrapper = document.getElementById(`wrapper_${codigo}`);
+        const input = document.getElementById(codigo);
+        
+        if (wrapper && input) {
+            if (nodosVisibles.has(codigo)) {
+                wrapper.classList.remove('hidden');
+            } else {
+                wrapper.classList.add('hidden');
+                if(input.tagName === 'SELECT') input.selectedIndex = 0;
+                else input.value = '';
             }
         }
     });
-
-    // Recursividad para la cascada
-    if (huboCambios) {
-        evaluarDependencias();
-    }
 }
 
 function agregarCampoPrueba() {
-    alert("El árbol de dependencias completo ya está cargado en el JSON inicial. ¡Pruébelo en la vista previa!");
+    alert("¡El DAG ya está operativo! Modifique el archivo salvia_esquema.js para agregar nuevos nodos al árbol.");
 }
 
 // ==========================================
-// INICIALIZADOR GENERAL (Unificado)
+// INICIALIZADOR GENERAL UNIFICADO
 // ==========================================
 document.addEventListener('DOMContentLoaded', () => {
-    // Funciones previas (Portal Público)
-    navPublic('home-view');
-    cargarCacheAlInicio(); 
-    generarCaptchas();
+    // Estas funciones ya las tienes definidas arriba en el archivo
+    if(typeof navPublic === 'function') navPublic('home-view');
+    if(typeof cargarCacheAlInicio === 'function') cargarCacheAlInicio(); 
+    if(typeof generarCaptchas === 'function') generarCaptchas();
     
-    // Iniciar Motor EAV (Constructor)
+    // Iniciar Motor DAG
     renderizarFormularioDinamico();
 });

@@ -76,11 +76,11 @@
                 <div class="flex items-center space-x-3">
                     <div class="text-white font-bold text-xl flex items-center border-r-2 border-white/30 pr-4">
                         <img src="assets/img/minigualdad_blanco.png" alt="MinIgualdad" class="h-10 md:h-12 object-contain mr-2"> 
-                        <div class="leading-tight">
+                        <div class="leading-tight hidden sm:block">
                             <span class="block text-sm font-normal text-white/80">Ministerio de</span> Igualdad y Equidad
                         </div>
                     </div>
-                    <div class="text-white font-extrabold text-2xl tracking-widest pl-2 flex items-center">
+                    <div class="text-white font-extrabold text-xl md:text-2xl tracking-widest pl-2 flex items-center">
                         <img src="assets/img/flower.png" alt="Salvia" class="h-8 md:h-10 object-contain mr-2"> SALVIA
                     </div>
                 </div>
@@ -91,7 +91,7 @@
                     </button>
                     
                     <button id="btn-nav-login" onclick="navPublic('login-view')" class="text-sm bg-white hover:bg-gray-100 text-[#B53D75] font-bold py-2 px-4 rounded transition shadow-sm focus:ring-4 focus:ring-white">
-                        Ingreso Funcionarios
+                        <span class="hidden sm:inline">Ingreso </span>Funcionarios
                     </button>
                 </div>
             </div>
@@ -101,84 +101,89 @@
             
             <section id="home-view" class="flex-grow flex flex-col bg-white relative overflow-hidden">
         
-        <div class="bg-[#380E44] text-white py-2 px-4 flex justify-between items-center z-10 relative">
-            <div class="flex items-center space-x-2">
-                <img src="./assets/img/flower.png" alt="Logo" class="w-6 h-6 opacity-80">
-                <span class="font-bold text-sm tracking-wider">SALVIA</span>
-            </div>
-            <span class="bg-white text-[#24A0B0] text-[10px] font-black px-2 py-0.5 rounded-full mt-1 shadow-inner"> versión
-                <button onclick="abrirModalHistoria('versiones')" class="ml-3 text-gray-300 hover:text-[#24A0B0] transition-colors" title="Ver Historia de Usuario"><i class="fa-solid fa-circle-info text-xl"></i></button>
-            </span>
-        </div>
-
-        <div class="bg-[#B53D75] text-white text-center py-1 text-sm font-medium z-10 relative shadow-sm">
-            Mujeres libres de violencias
-        </div>
-        
-        <div class="flex-grow container mx-auto px-6 py-8 flex items-center z-10 relative">
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center h-full w-full">
-
-                <div class="lg:col-span-5 flex flex-col justify-center space-y-8 animate-fade-in-up">
-                    <img src="./assets/img/salvia_logo_landing.png" alt="Salvia Logo Grande" class="w-64 md:w-80 drop-shadow-sm animate-fade-in">
-
-                    <div class="flex items-start justify-between relative">
-                       <div>
-                           <h1 class="text-4xl md:text-5xl font-black text-[#380E44] leading-none mb-4">
-                               Sistema de Registro, Atención y Seguimiento
-                           </h1>
-                           <h2 class="text-xl text-gray-500 font-medium">
-                               Casos de violencias basadas en género
-                           </h2>
-                       </div>
-                       <button onclick="abrirModalHistoria('glosario')" class="ml-3 text-gray-300 hover:text-[#24A0B0] transition-colors" title="Ver Historia de Usuario"><i class="fa-solid fa-circle-info text-xl"></i></button>
+                <div class="bg-[#380E44] text-white py-2 px-4 flex justify-between items-center z-10 relative">
+                    <div class="flex items-center space-x-2">
+                        <img src="./assets/img/flower.png" alt="Logo" class="w-6 h-6 opacity-80">
+                        <span class="font-bold text-sm tracking-wider">SALVIA</span>
                     </div>
-
-                    <p class="text-lg text-gray-600 leading-relaxed max-w-lg">
-                        Este es un espacio seguro, confidencial y gratuito para el acompañamiento integral. No estás sola.
-                        <br><br>
-                        <span class="font-bold text-[#B53D75] flex items-center">
-                            <i class="fa-solid fa-phone-volume mr-2 animate-pulse"></i>
-                            Si eres víctima de violencia de género y estás en peligro comunícate con la Línea 155.
-                        </span>
-                    </p>
-
-                    <div class="pt-4">
-                        <button onclick="navPublic('login-victima-view')" class="bg-[#B53D75] hover:bg-[#943260] text-white font-bold py-4 px-10 rounded-full shadow-lg transition-all hover:scale-105 hover:shadow-xl flex items-center text-sm uppercase tracking-wider group">
-                            Ingreso Mujeres 
-                            <span class="ml-3 bg-white/20 rounded-full w-8 h-8 flex items-center justify-center group-hover:bg-white/30 transition-colors">
-                                <i class="fa-solid fa-arrow-right"></i>
-                                <button onclick="abrirModalHistoria('registro_victima')" class="ml-3 text-gray-300 hover:text-[#24A0B0] transition-colors" title="Ver Historia de Usuario"><i class="fa-solid fa-circle-info text-xl"></i></button>
-                            </span>
+                    <span class="bg-white text-[#24A0B0] text-[10px] font-black px-2 py-0.5 rounded-full shadow-inner flex items-center"> 
+                        versión 2.4
+                        <button onclick="abrirModalHistoria('versiones')" class="ml-2 text-gray-400 hover:text-[#24A0B0] transition-colors" title="Ver Historia de Usuario">
+                            <i class="fa-solid fa-circle-info text-sm"></i>
                         </button>
-                    </div>
-
-                    <div class="mt-8 pt-6 border-t border-gray-100">
-                        <p class="text-sm text-gray-500 mb-4 font-medium uppercase tracking-wide">Otras opciones de registro</p>
-                        <button onclick="abrirModalHistoria('reporte_terceros')" class="ml-3 text-gray-300 hover:text-[#24A0B0] transition-colors" title="Ver Historia de Usuario"><i class="fa-solid fa-circle-info text-xl"></i></button>
-                        <button onclick="navPublic('reporte-view')" class="w-full md:w-auto bg-white border-2 border-[#380E44] text-[#380E44] font-bold py-3 px-6 rounded-xl hover:bg-[#380E44] hover:text-white transition-colors flex items-center justify-center md:justify-start group shadow-sm">
-                            <div class="w-10 h-10 bg-purple-50 text-[#380E44] rounded-lg flex items-center justify-center mr-4 group-hover:bg-white/20 group-hover:text-white transition-colors">
-                                <i class="fa-solid fa-users text-xl"></i>
-                            </div>
-                            <div class="text-left">
-                                <span class="block text-sm leading-tight">Reportar caso de un</span>
-                                <span class="text-base">Familiar o Conocido</span>
-                            </div>
-                        </button>
-                    </div>
+                    </span>
                 </div>
 
-                <div class="hidden lg:block lg:col-span-7 h-full relative animate-fade-in" style="animation-delay: 0.3s;">
-                    <div class="relative h-[700px] w-full">
-                        <div class="absolute -top-10 -right-10 w-64 h-64 bg-[#B53D75] rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse"></div>
-                        <div class="absolute -bottom-10 -left-10 w-64 h-64 bg-[#FCCC3C] rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse" style="animation-delay: 1s;"></div>
-                        
-                        <img src="./assets/img/imagen_banner.jpg" alt="Mujeres abrazadas en solidaridad" class="w-full h-full object-cover rounded-[3rem] shadow-2xl relative z-10 transform hover:scale-[1.01] transition-transform duration-500" style="object-position: center 25%;">
+                <div class="bg-[#B53D75] text-white text-center py-1 text-sm font-medium z-10 relative shadow-sm">
+                    Mujeres libres de violencias
+                </div>
+                
+                <div class="flex-grow container mx-auto px-6 py-8 flex items-center z-10 relative">
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center h-full w-full">
+
+                        <div class="lg:col-span-5 flex flex-col justify-center space-y-8 animate-fade-in-up">
+                            <img src="./assets/img/salvia_logo_landing.png" alt="Salvia Logo Grande" class="w-64 md:w-80 drop-shadow-sm animate-fade-in">
+
+                            <div class="flex items-start justify-between relative">
+                               <div>
+                                   <h1 class="text-4xl md:text-5xl font-black text-[#380E44] leading-none mb-4">
+                                       Sistema de Registro, Atención y Seguimiento
+                                   </h1>
+                                   <h2 class="text-xl text-gray-500 font-medium">
+                                       Casos de violencias basadas en género
+                                   </h2>
+                               </div>
+                               <button onclick="abrirModalHistoria('glosario')" class="absolute top-0 right-0 lg:static lg:ml-4 text-gray-300 hover:text-[#24A0B0] transition-colors" title="Ver Historia de Usuario"><i class="fa-solid fa-circle-info text-3xl"></i></button>
+                            </div>
+
+                            <p class="text-lg text-gray-600 leading-relaxed max-w-lg">
+                                Este es un espacio seguro, confidencial y gratuito para el acompañamiento integral. No estás sola.
+                                <br><br>
+                                <span class="font-bold text-[#B53D75] flex items-center">
+                                    <i class="fa-solid fa-phone-volume mr-2 animate-pulse"></i>
+                                    Si eres víctima de violencia de género y estás en peligro comunícate con la Línea 155.
+                                </span>
+                            </p>
+
+                            <div class="pt-4">
+                                <button onclick="navPublic('login-victima-view')" class="bg-[#B53D75] hover:bg-[#943260] text-white font-bold py-4 px-10 rounded-full shadow-lg transition-all hover:scale-105 hover:shadow-xl flex items-center text-sm uppercase tracking-wider group">
+                                    Ingreso Mujeres 
+                                    <span class="ml-3 bg-white/20 rounded-full w-8 h-8 flex items-center justify-center group-hover:bg-white/30 transition-colors relative">
+                                        <i class="fa-solid fa-arrow-right"></i>
+                                    </span>
+                                </button>
+                                <button onclick="abrirModalHistoria('registro_victima')" class="text-gray-300 hover:text-[#24A0B0] transition-colors" title="Ver Historia de Usuario"><i class="fa-solid fa-circle-info text-xl"></i></button>
+                            </div>
+
+                            <div class="mt-8 pt-6 border-t border-gray-100">
+                                <div class="flex justify-between items-center mb-4">
+                                    <p class="text-sm text-gray-500 font-medium uppercase tracking-wide">Otras opciones de registro</p>
+                                    <button onclick="abrirModalHistoria('reporte_terceros')" class="text-gray-300 hover:text-[#24A0B0] transition-colors" title="Ver Historia de Usuario"><i class="fa-solid fa-circle-info text-xl"></i></button>
+                                </div>
+                                <button onclick="navPublic('reporte-view')" class="w-full md:w-auto bg-white border-2 border-[#380E44] text-[#380E44] font-bold py-3 px-6 rounded-xl hover:bg-[#380E44] hover:text-white transition-colors flex items-center justify-center md:justify-start group shadow-sm">
+                                    <div class="w-10 h-10 bg-purple-50 text-[#380E44] rounded-lg flex items-center justify-center mr-4 group-hover:bg-white/20 group-hover:text-white transition-colors">
+                                        <i class="fa-solid fa-users text-xl"></i>
+                                    </div>
+                                    <div class="text-left">
+                                        <span class="block text-sm leading-tight">Reportar caso de un</span>
+                                        <span class="text-base">Familiar o Conocido</span>
+                                    </div>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="hidden lg:block lg:col-span-7 h-full relative animate-fade-in" style="animation-delay: 0.3s;">
+                            <div class="relative h-[700px] w-full">
+                                <div class="absolute -top-10 -right-10 w-64 h-64 bg-[#B53D75] rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse"></div>
+                                <div class="absolute -bottom-10 -left-10 w-64 h-64 bg-[#FCCC3C] rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse" style="animation-delay: 1s;"></div>
+                                
+                                <img src="./assets/img/imagen_banner.jpg" alt="Mujeres abrazadas en solidaridad" class="w-full h-full object-cover rounded-[3rem] shadow-2xl relative z-10 transform hover:scale-[1.01] transition-transform duration-500" style="object-position: center 25%;">
+                            </div>
+                        </div>
+
                     </div>
                 </div>
-
-            </div>
-        </div>
-    </section>
+            </section>
 
             <section id="reporte-view" class="hidden-view flex-grow container mx-auto px-4 py-8 max-w-4xl">
                 <button onclick="navPublic('home-view')" class="mb-6 text-[#380E44] font-bold flex items-center hover:underline">
@@ -285,14 +290,14 @@
                                 <textarea rows="4" class="client-input-field" placeholder="Describa brevemente la situación..."></textarea>
                             </div>
 
-                            <div class="flex items-center space-x-4 pt-6 mt-6 border-t border-gray-200">
-                                <span id="captcha-text" class="text-gray-600 font-mono text-lg italic select-none">Verificación: </span>
-                                <input type="text" id="reporte-captcha" required class="numpad-trigger w-24 client-input-field text-center cursor-pointer bg-gray-50" placeholder="?" inputmode="numeric">
+                            <div class="flex flex-col sm:flex-row items-center sm:space-x-4 pt-6 mt-6 border-t border-gray-200">
+                                <span id="captcha-text" class="text-gray-600 font-mono text-lg italic select-none mb-2 sm:mb-0">Verificación: </span>
+                                <input type="text" id="reporte-captcha" required class="numpad-trigger w-24 client-input-field text-center cursor-pointer bg-gray-50 mb-2 sm:mb-0" placeholder="?" inputmode="numeric">
                                 <span class="text-xs text-gray-500">Haga clic en el cuadro</span>
                             </div>
 
                             <div class="pt-6 flex justify-center">
-                                <button type="submit" class="client-btn-success text-lg py-3 px-12">
+                                <button type="submit" class="client-btn-success w-full sm:w-auto text-lg py-3 px-12">
                                     Enviar reporte
                                 </button>
                             </div>
@@ -301,9 +306,7 @@
                 </div>
             </section>
 
-
             <section id="login-view" class="hidden-view flex-grow flex items-center justify-center p-4">
-                
                 <div class="w-full max-w-4xl bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden flex flex-col md:flex-row slide-in">
                     
                     <div class="hidden md:block md:w-1/2 relative bg-[#f4f1f9]">
@@ -311,7 +314,6 @@
                     </div>
 
                     <div class="w-full md:w-1/2 p-8 lg:p-12 flex flex-col justify-center bg-white">
-                        
                         <button onclick="navPublic('home-view')" class="mb-8 text-gray-400 text-sm font-bold flex items-center hover:text-[#380E44] transition-colors w-fit">
                             <i class="fa-solid fa-arrow-left mr-2"></i> Volver
                         </button>
@@ -352,7 +354,6 @@
                             </button>
                         </form>
                     </div>
-
                 </div>
             </section>
 
@@ -360,8 +361,8 @@
                 <div class="bg-white p-8 rounded-xl shadow-2xl max-w-md w-full text-center border-t-8 border-[#3366CC]">
                     <h2 class="text-2xl font-bold text-gray-800 mb-6">Seleccione una acción</h2>
                     <div class="space-y-4">
-                        <button onclick="prepararFormulario('funcionario')" class="w-full client-btn-success">Registrar un caso entrante</button>
-                        <button onclick="ingresarDashboardFinal()" class="w-full client-btn-success">Ingresar al Dashboard</button>
+                        <button onclick="prepararFormulario('funcionario')" class="w-full client-btn-success py-3">Registrar un caso entrante</button>
+                        <button onclick="ingresarDashboardFinal()" class="w-full client-btn-success py-3">Ingresar al Dashboard</button>
                     </div>
                 </div>
             </section>
@@ -400,7 +401,6 @@
             </section>
 
             <section id="trazabilidad-view" class="hidden-view flex-grow container mx-auto px-4 py-8 max-w-3xl">
-                
                 <div class="flex justify-between items-center mb-6">
                     <button onclick="navPublic('login-victima-view')" class="text-[#380E44] font-bold flex items-center hover:underline focus:outline-none">
                         <i class="fa-solid fa-arrow-left mr-2"></i> Volver
@@ -411,8 +411,7 @@
                 </div>
 
                 <div class="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100">
-                    
-                    <div class="bg-[#380E44] text-white px-6 py-5 flex justify-between items-center">
+                    <div class="bg-[#380E44] text-white px-6 py-5 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
                         <div>
                             <h1 class="text-2xl font-bold">Trazabilidad de mi caso</h1>
                             <p class="text-sm mt-1 opacity-90">Radicado: VBG-2026-8842</p>
@@ -435,7 +434,6 @@
                         <h3 class="font-bold text-gray-800 mb-6 text-lg">Estado Actual del Proceso</h3>
                         
                         <div class="relative border-l-4 border-gray-200 ml-4 space-y-8 pb-4">
-                            
                             <div class="relative pl-8">
                                 <div class="absolute -left-3.5 top-0 w-6 h-6 bg-green-500 rounded-full border-4 border-white flex items-center justify-center shadow">
                                     <i class="fa-solid fa-check text-white text-[10px]"></i>
@@ -474,7 +472,6 @@
                                 <p class="text-sm text-gray-500 font-bold mb-1 mt-1"><i class="fa-solid fa-building text-xs mr-1"></i> Equipo Psicosocial SALVIA</p>
                                 <p class="text-gray-500 text-sm mt-1">A la espera de confirmación de estabilización del riesgo.</p>
                             </div>
-
                         </div>
                     </div>
                 </div>
@@ -515,10 +512,15 @@
 
     <div id="dashboard-app" class="hidden-view h-full w-full bg-dashboard-bg flex overflow-hidden">
         
-        <aside class="w-64 bg-slate-900 text-white flex flex-col h-full shrink-0">
-            <div class="p-6 border-b border-slate-800">
-                <h1 class="text-xl font-bold tracking-tight">SALVIA <span class="text-purple-400">Fase II</span></h1>
-                <p class="text-xs text-slate-400 mt-1 uppercase">Ministerio de Igualdad</p>
+        <aside id="dashboard-sidebar" class="w-64 bg-slate-900 hidden md:flex text-white flex-col h-full shrink-0 absolute md:relative z-50">
+            <div class="p-6 border-b border-slate-800 flex justify-between items-center">
+                <div>
+                    <h1 class="text-xl font-bold tracking-tight">SALVIA <span class="text-purple-400">Fase II</span></h1>
+                    <p class="text-xs text-slate-400 mt-1 uppercase">Ministerio de Igualdad</p>
+                </div>
+                <button class="md:hidden text-slate-400 hover:text-white" onclick="document.getElementById('dashboard-sidebar').classList.add('hidden')">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
             </div>
             <nav class="flex-1 overflow-y-auto py-4">
                 <div class="px-4 mb-2 text-xs font-semibold text-slate-500 uppercase tracking-wider">Módulos Core</div>
@@ -538,8 +540,8 @@
                 <button onclick="switchDashView('masp')" id="nav-masp" class="w-full flex items-center px-6 py-3 text-left hover:bg-slate-800 transition-colors">
                     <i class="fa-solid fa-mobile-screen-button w-6 mr-3"></i> App Móvil MASP
                 </button>
-                <button onclick="switchDashView('builder')" class="w-full text-left px-4 py-2 text-slate-600 hover:bg-indigo-50 hover:text-indigo-700 rounded-lg flex items-center transition-colors font-medium">
-                    <i class="fa-solid fa-hammer w-5 text-center mr-2"></i> Constructor (SuperAdmin)
+                <button id="nav-builder" onclick="switchDashView('builder')" class="w-full flex items-center px-6 py-3 text-left text-slate-400 hover:bg-slate-800 transition-colors">
+                    <i class="fa-solid fa-hammer w-6 mr-3"></i> Constructor (EAV)
                 </button>
             </nav>
             <div class="p-4 border-t border-slate-800 bg-slate-950 flex flex-col gap-3">
@@ -555,22 +557,27 @@
         </aside>
 
         <main class="flex-1 flex flex-col h-full relative overflow-hidden pb-32">
-            <header class="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-8 shrink-0">
-                <div id="view-title" class="text-lg font-semibold text-slate-700">Panel de Control Estratégico</div>
-                <div class="flex items-center gap-4">
-                    
+            <header class="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-4 md:px-8 shrink-0">
+                <div class="flex items-center">
+                    <button class="md:hidden text-slate-600 hover:text-slate-900 mr-4 focus:outline-none" onclick="document.getElementById('dashboard-sidebar').classList.toggle('hidden')">
+                        <i class="fa-solid fa-bars text-xl"></i>
+                    </button>
+                    <div id="view-title" class="text-lg font-semibold text-slate-700">Panel de Control Estratégico</div>
+                </div>
+                
+                <div class="flex items-center gap-2 md:gap-4">
                     <button type="button" onclick="toggleAsistenteVoz()" id="btn-audio-dash" class="bg-indigo-50 hover:bg-indigo-100 text-indigo-700 p-2 rounded-full transition focus:ring-2 focus:ring-indigo-500 outline-none" title="Activar Asistente de Voz">
                         <i class="fa-solid fa-ear-listen text-lg"></i>
                     </button>
 
-                    <span class="text-xs text-slate-500 italic"><i class="fa-solid fa-clock mr-1"></i> Sesión Activa</span>
+                    <span class="text-xs text-slate-500 italic hidden md:inline"><i class="fa-solid fa-clock mr-1"></i> Sesión Activa</span>
                     <button onclick="toggleDesignControls()" class="bg-indigo-50 text-indigo-700 px-3 py-1.5 rounded-md text-sm font-medium hover:bg-indigo-100 transition-colors">
-                        <i class="fa-solid fa-pen-nib mr-1"></i> Modo Comentarios
+                        <i class="fa-solid fa-pen-nib md:mr-1"></i> <span class="hidden md:inline">Modo Comentarios</span>
                     </button>
                 </div>
             </header>
 
-            <div id="content-area" class="flex-1 p-8 overflow-y-auto">
+            <div id="content-area" class="flex-1 p-4 md:p-8 overflow-y-auto">
                 <div id="view-dashboard" class="fade-in space-y-6">
                     <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
                         <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
@@ -617,38 +624,40 @@
                 </div>
 
                 <div id="view-seguimiento" class="hidden fade-in space-y-6">
-                    <div class="flex justify-between items-center">
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                         <h2 class="text-2xl font-bold text-slate-800">Gestión de Seguimiento</h2>
-                        <input type="text" placeholder="Buscar por ID..." class="px-4 py-2 border rounded-lg text-sm w-64 bg-white">
+                        <input type="text" placeholder="Buscar por ID..." class="px-4 py-2 border rounded-lg text-sm w-full md:w-64 bg-white">
                     </div>
                     <div class="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm">
-                        <table class="w-full text-left">
-                            <thead class="bg-slate-50 border-b border-slate-200">
-                                <tr>
-                                    <th class="px-6 py-4 text-xs font-semibold text-slate-600 uppercase">Caso ID</th>
-                                    <th class="px-6 py-4 text-xs font-semibold text-slate-600 uppercase">Consultante</th>
-                                    <th class="px-6 py-4 text-xs font-semibold text-slate-600 uppercase">Estado Actual</th>
-                                    <th class="px-6 py-4 text-xs font-semibold text-slate-600 uppercase">Días en Espera</th>
-                                    <th class="px-6 py-4 text-xs font-semibold text-slate-600 uppercase">Acción</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-slate-100 text-sm" id="tabla-seguimiento">
-                                <tr>
-                                    <td class="px-6 py-4 font-mono text-xs">VBG-2026-001</td>
-                                    <td class="px-6 py-4 font-medium">Maria R. Castellanos</td>
-                                    <td class="px-6 py-4"><span class="px-2 py-1 rounded bg-cyan-100 text-cyan-700 text-xs font-bold">Enrutado</span></td>
-                                    <td class="px-6 py-4">3 días</td>
-                                    <td class="px-6 py-4"><button class="text-indigo-600 hover:underline">Gestionar Barrera</button></td>
-                                </tr>
-                                <tr>
-                                    <td class="px-6 py-4 font-mono text-xs">VBG-2026-005</td>
-                                    <td class="px-6 py-4 font-medium">Diana P. Gómez</td>
-                                    <td class="px-6 py-4"><span class="px-2 py-1 rounded bg-red-100 text-red-700 text-xs font-bold">Alerta Vital</span></td>
-                                    <td class="px-6 py-4 font-bold text-red-600">6 horas</td>
-                                    <td class="px-6 py-4"><button class="bg-red-600 text-white px-3 py-1 rounded shadow hover:bg-red-700 text-xs font-bold">INTERVENIR URGENTE</button></td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <div class="w-full overflow-x-auto">
+                            <table class="w-full min-w-[600px] text-left">
+                                <thead class="bg-slate-50 border-b border-slate-200">
+                                    <tr>
+                                        <th class="px-6 py-4 text-xs font-semibold text-slate-600 uppercase">Caso ID</th>
+                                        <th class="px-6 py-4 text-xs font-semibold text-slate-600 uppercase">Consultante</th>
+                                        <th class="px-6 py-4 text-xs font-semibold text-slate-600 uppercase">Estado Actual</th>
+                                        <th class="px-6 py-4 text-xs font-semibold text-slate-600 uppercase">Días en Espera</th>
+                                        <th class="px-6 py-4 text-xs font-semibold text-slate-600 uppercase">Acción</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-100 text-sm" id="tabla-seguimiento">
+                                    <tr>
+                                        <td class="px-6 py-4 font-mono text-xs">VBG-2026-001</td>
+                                        <td class="px-6 py-4 font-medium">Maria R. Castellanos</td>
+                                        <td class="px-6 py-4"><span class="px-2 py-1 rounded bg-cyan-100 text-cyan-700 text-xs font-bold">Enrutado</span></td>
+                                        <td class="px-6 py-4">3 días</td>
+                                        <td class="px-6 py-4"><button class="text-indigo-600 hover:underline">Gestionar Barrera</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-6 py-4 font-mono text-xs">VBG-2026-005</td>
+                                        <td class="px-6 py-4 font-medium">Diana P. Gómez</td>
+                                        <td class="px-6 py-4"><span class="px-2 py-1 rounded bg-red-100 text-red-700 text-xs font-bold">Alerta Vital</span></td>
+                                        <td class="px-6 py-4 font-bold text-red-600">6 horas</td>
+                                        <td class="px-6 py-4"><button class="bg-red-600 text-white px-3 py-1 rounded shadow hover:bg-red-700 text-xs font-bold">INTERVENIR URGENTE</button></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
 
@@ -663,7 +672,7 @@
                                 <div class="p-4 bg-slate-50 rounded-lg border-l-4 border-purple-500 hover:bg-purple-50 transition-colors">
                                     <p class="text-sm font-semibold text-slate-700 mb-1">1. Distorsión de la realidad (Gaslighting)</p>
                                     <p class="text-xs text-slate-500 mb-3 italic">"¿Con frecuencia usted termina pidiendo perdón después de una discusión, o llega a dudar de su propia memoria porque él le dice que usted está 'loca' o que las cosas no pasaron como usted recuerda?"</p>
-                                    <div class="flex gap-4 mt-2">
+                                    <div class="flex flex-col sm:flex-row gap-4 mt-2">
                                         <label class="flex items-center gap-2 cursor-pointer text-sm font-medium"><input type="radio" name="q1" value="4" class="risk-calc"> Sí, me pasa seguido</label>
                                         <label class="flex items-center gap-2 cursor-pointer text-sm font-medium"><input type="radio" name="q1" value="0" class="risk-calc" checked> No</label>
                                     </div>
@@ -672,7 +681,7 @@
                                 <div class="p-4 bg-slate-50 rounded-lg border-l-4 border-purple-500 hover:bg-purple-50 transition-colors">
                                     <p class="text-sm font-semibold text-slate-700 mb-1">2. Invalidación Emocional y Humillación</p>
                                     <p class="text-xs text-slate-500 mb-3 italic">"¿Él suele hacerle comentarios hirientes sobre su cuerpo, su inteligencia o su forma de actuar, y cuando usted se ofende, él minimiza su sentir diciendo que usted 'exagera' o que 'solo era una broma'?"</p>
-                                    <div class="flex gap-4 mt-2">
+                                    <div class="flex flex-col sm:flex-row gap-4 mt-2">
                                         <label class="flex items-center gap-2 cursor-pointer text-sm font-medium"><input type="radio" name="q2" value="3" class="risk-calc"> Sí, lo hace</label>
                                         <label class="flex items-center gap-2 cursor-pointer text-sm font-medium"><input type="radio" name="q2" value="0" class="risk-calc" checked> No</label>
                                     </div>
@@ -681,7 +690,7 @@
                                 <div class="p-4 bg-slate-50 rounded-lg border-l-4 border-indigo-500 hover:bg-indigo-50 transition-colors">
                                     <p class="text-sm font-semibold text-slate-700 mb-1">3. Aislamiento y Prohibición</p>
                                     <p class="text-xs text-slate-500 mb-3 italic">"¿Siente que cada vez ve menos a sus amistades o familiares porque a él le molesta, le prohíbe verlos, o porque usted prefiere alejarse para evitar tener un problema con él?"</p>
-                                    <div class="flex gap-4 mt-2">
+                                    <div class="flex flex-col sm:flex-row gap-4 mt-2">
                                         <label class="flex items-center gap-2 cursor-pointer text-sm font-medium"><input type="radio" name="q3" value="4" class="risk-calc"> Sí, me he aislado</label>
                                         <label class="flex items-center gap-2 cursor-pointer text-sm font-medium"><input type="radio" name="q3" value="0" class="risk-calc" checked> No</label>
                                     </div>
@@ -690,7 +699,7 @@
                                 <div class="p-4 bg-slate-50 rounded-lg border-l-4 border-indigo-500 hover:bg-indigo-50 transition-colors">
                                     <p class="text-sm font-semibold text-slate-700 mb-1">4. Pérdida de Autodeterminación (Control)</p>
                                     <p class="text-xs text-slate-500 mb-3 italic">"¿Siente miedo constante al tomar decisiones cotidianas (cómo vestirse, en qué gastar su dinero, o con quién hablar) por temor a la reacción agresiva o manipuladora que él pueda tener?"</p>
-                                    <div class="flex gap-4 mt-2">
+                                    <div class="flex flex-col sm:flex-row gap-4 mt-2">
                                         <label class="flex items-center gap-2 cursor-pointer text-sm font-medium"><input type="radio" name="q4" value="4" class="risk-calc"> Sí, mido cada cosa que hago</label>
                                         <label class="flex items-center gap-2 cursor-pointer text-sm font-medium"><input type="radio" name="q4" value="0" class="risk-calc" checked> No</label>
                                     </div>
@@ -699,7 +708,7 @@
                                 <div class="p-4 bg-red-50 rounded-lg border-l-4 border-red-500 hover:bg-red-100 transition-colors">
                                     <p class="text-sm font-semibold text-slate-700 mb-1">5. Amenazas e Intimidación</p>
                                     <p class="text-xs text-slate-500 mb-3 italic">"¿Durante una discusión, él ha destruido objetos que a usted le importan, ha golpeado paredes, o le ha sugerido que 'algo malo podría pasarle' si usted decide dejarlo o actuar por su cuenta?"</p>
-                                    <div class="flex gap-4 mt-2">
+                                    <div class="flex flex-col sm:flex-row gap-4 mt-2">
                                         <label class="flex items-center gap-2 cursor-pointer text-sm font-medium text-red-700"><input type="radio" name="q5" value="5" class="risk-calc"> Sí, me ha amenazado o intimidado</label>
                                         <label class="flex items-center gap-2 cursor-pointer text-sm font-medium"><input type="radio" name="q5" value="0" class="risk-calc" checked> No</label>
                                     </div>
@@ -727,7 +736,7 @@
 
                 </div>
 
-                <div id="view-masp" class="hidden fade-in flex flex-col md:flex-row items-center justify-around py-12 gap-8">
+                <div id="view-masp" class="hidden fade-in flex flex-col lg:flex-row items-center justify-around py-12 gap-8">
                     <div class="max-w-xl">
                         <div class="inline-block bg-purple-100 text-[#380E44] px-3 py-1 rounded-full font-bold text-xs mb-4">FASE 3 DEL PROYECTO</div>
                         <h2 class="text-3xl font-bold text-slate-800 mb-4">Ecosistema Móvil MASP</h2>
@@ -758,7 +767,7 @@
                             </div>
                         </div>
 
-                        <a href="masp_app.html" target="_blank" class="inline-flex items-center justify-center bg-[#380E44] text-white font-bold py-3 px-6 rounded-lg shadow-lg hover:bg-purple-900 transition-all transform hover:scale-105">
+                        <a href="masp_app.html" target="_blank" class="inline-flex items-center justify-center w-full sm:w-auto bg-[#380E44] text-white font-bold py-3 px-6 rounded-lg shadow-lg hover:bg-purple-900 transition-all transform hover:scale-105">
                             Abrir Mockup de App Móvil <i class="fa-solid fa-arrow-up-right-from-square ml-3"></i>
                         </a>
                         <p class="text-xs text-slate-400 mt-3"><i class="fa-solid fa-info-circle mr-1"></i> El enlace abrirá una nueva pestaña (masp_app.html).</p>
@@ -812,7 +821,7 @@
                                     <div class="p-4 bg-slate-50 rounded-lg border-l-4 border-pink-500 hover:bg-pink-50 transition-colors">
                                         <p class="text-sm font-semibold text-slate-700 mb-1">1. Negación de Identidad e Invalidación</p>
                                         <p class="text-xs text-slate-500 mb-3 italic">"¿En su entorno (familia, trabajo) le obligan a comportarse o vestirse de una forma que no corresponde con su identidad, o se niegan sistemáticamente a usar su nombre identitario para humillarle?"</p>
-                                        <div class="flex gap-4 mt-2">
+                                        <div class="flex flex-col sm:flex-row gap-4 mt-2">
                                             <label class="flex items-center gap-2 cursor-pointer text-sm font-medium"><input type="radio" name="lgb1" value="3" class="risk-calc-lgb"> Sí, me obligan a ocultarme</label>
                                             <label class="flex items-center gap-2 cursor-pointer text-sm font-medium"><input type="radio" name="lgb1" value="0" class="risk-calc-lgb" checked> No</label>
                                         </div>
@@ -821,7 +830,7 @@
                                     <div class="p-4 bg-slate-50 rounded-lg border-l-4 border-pink-500 hover:bg-pink-50 transition-colors">
                                         <p class="text-sm font-semibold text-slate-700 mb-1">2. Chantaje y Exposición Forzada ("Outing")</p>
                                         <p class="text-xs text-slate-500 mb-3 italic">"¿Alguien (pareja, familiar o jefe) le ha amenazado con revelar su orientación sexual o identidad de género a otras personas con el fin de controlarle, extorsionarle o causarle daño?"</p>
-                                        <div class="flex gap-4 mt-2">
+                                        <div class="flex flex-col sm:flex-row gap-4 mt-2">
                                             <label class="flex items-center gap-2 cursor-pointer text-sm font-medium"><input type="radio" name="lgb2" value="4" class="risk-calc-lgb"> Sí, me han amenazado con exponer mi identidad</label>
                                             <label class="flex items-center gap-2 cursor-pointer text-sm font-medium"><input type="radio" name="lgb2" value="0" class="risk-calc-lgb" checked> No</label>
                                         </div>
@@ -830,7 +839,7 @@
                                     <div class="p-4 bg-slate-50 rounded-lg border-l-4 border-orange-500 hover:bg-orange-50 transition-colors">
                                         <p class="text-sm font-semibold text-slate-700 mb-1">3. Expulsión Familiar y Violencia Económica</p>
                                         <p class="text-xs text-slate-500 mb-3 italic">"¿Ha sido expulsado/a/e de su vivienda, le han quitado el apoyo económico básico, o su familia le ha aislado de sus amistades y redes de apoyo por el hecho de tener una identidad diversa?"</p>
-                                        <div class="flex gap-4 mt-2">
+                                        <div class="flex flex-col sm:flex-row gap-4 mt-2">
                                             <label class="flex items-center gap-2 cursor-pointer text-sm font-medium"><input type="radio" name="lgb3" value="4" class="risk-calc-lgb"> Sí, he sufrido expulsión o bloqueo económico</label>
                                             <label class="flex items-center gap-2 cursor-pointer text-sm font-medium"><input type="radio" name="lgb3" value="0" class="risk-calc-lgb" checked> No</label>
                                         </div>
@@ -839,7 +848,7 @@
                                     <div class="p-4 bg-red-50 rounded-lg border-l-4 border-red-600 hover:bg-red-100 transition-colors">
                                         <p class="text-sm font-semibold text-slate-700 mb-1">4. Riesgo de Agresión "Correctiva" o Física</p>
                                         <p class="text-xs text-slate-500 mb-3 italic">"¿Ha recibido amenazas directas, golpizas, o comentarios que sugieran que usted necesita 'ser corregido/a/e' mediante violencia física o violencia sexual por su orientación o identidad?"</p>
-                                        <div class="flex gap-4 mt-2">
+                                        <div class="flex flex-col sm:flex-row gap-4 mt-2">
                                             <label class="flex items-center gap-2 cursor-pointer text-sm font-medium text-red-700"><input type="radio" name="lgb4" value="5" class="risk-calc-lgb"> Sí, he recibido amenazas correctivas o físicas</label>
                                             <label class="flex items-center gap-2 cursor-pointer text-sm font-medium"><input type="radio" name="lgb4" value="0" class="risk-calc-lgb" checked> No</label>
                                         </div>
@@ -867,24 +876,8 @@
                     </div>
 
                 </div>
-            </div>
-
-            <div id="design-controls" class="absolute top-0 right-0 w-80 h-full bg-white shadow-2xl border-l border-slate-200 translate-x-full transition-transform duration-300 z-50">
-                <div class="p-6">
-                    <div class="flex justify-between items-center mb-8">
-                        <h3 class="font-black text-slate-800 uppercase tracking-tighter">Bitácora de Ajustes</h3>
-                        <button onclick="toggleDesignControls()" class="text-slate-400 hover:text-red-500"><i class="fa-solid fa-xmark"></i></button>
-                    </div>
-                    <div class="space-y-6">
-                        <div>
-                            <label class="block text-xs font-bold text-slate-500 mb-2 uppercase">Anotaciones de Supervisión</label>
-                            <textarea id="feedback-text" placeholder="Escriba aquí los cambios sugeridos..." class="w-full h-32 p-3 text-sm border rounded-lg bg-slate-50 outline-none"></textarea>
-                        </div>
-                        <button onclick="submitFeedback()" class="w-full py-3 bg-indigo-600 text-white rounded-lg font-bold text-sm shadow-lg hover:bg-indigo-700 active:scale-95 transition-all">REGISTRAR CAMBIOS</button>
-                    </div>
-                </div>
-            </div>
-            <div id="view-builder" class="hidden fade-in space-y-6">
+                
+                <div id="view-builder" class="hidden fade-in space-y-6">
                     <div class="max-w-4xl">
                         <h2 class="text-2xl font-bold text-slate-800 mb-2">Motor de Formularios Dinámicos</h2>
                         <p class="text-slate-500 mb-6">Administración de campos EAV (Entity-Attribute-Value). Los cambios aquí se reflejan instantáneamente en los formularios sin alterar la base de datos.</p>
@@ -894,9 +887,6 @@
                             <div class="bg-slate-800 rounded-xl flex flex-col shadow-lg text-slate-300 font-mono text-xs h-[500px]">
                                 <div class="flex justify-between items-center p-4 border-b border-slate-700 shrink-0">
                                     <span class="font-bold text-white"><i class="fa-solid fa-code mr-2"></i>Esquema (JSON)</span>
-                                    <button onclick="agregarCampoPrueba()" class="bg-indigo-600 hover:bg-indigo-500 text-white px-3 py-1.5 rounded text-[10px] font-sans font-bold transition shadow-sm">
-                                        + Agregar Campo Condicional
-                                    </button>
                                 </div>
                                 <div class="p-5 overflow-y-auto flex-1 scrollbar-thin scrollbar-thumb-slate-600 scrollbar-track-transparent">
                                     <pre id="json-preview" class="whitespace-pre-wrap leading-relaxed">Cargando esquema...</pre>
@@ -919,6 +909,24 @@
                         </div>
                     </div>
                 </div>
+            </div>
+
+            <div id="design-controls" class="absolute top-0 right-0 w-80 h-full bg-white shadow-2xl border-l border-slate-200 translate-x-full transition-transform duration-300 z-50">
+                <div class="p-6">
+                    <div class="flex justify-between items-center mb-8">
+                        <h3 class="font-black text-slate-800 uppercase tracking-tighter">Bitácora de Ajustes</h3>
+                        <button onclick="toggleDesignControls()" class="text-slate-400 hover:text-red-500"><i class="fa-solid fa-xmark"></i></button>
+                    </div>
+                    <div class="space-y-6">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 mb-2 uppercase">Anotaciones de Supervisión</label>
+                            <textarea id="feedback-text" placeholder="Escriba aquí los cambios sugeridos..." class="w-full h-32 p-3 text-sm border rounded-lg bg-slate-50 outline-none"></textarea>
+                        </div>
+                        <button onclick="submitFeedback()" class="w-full py-3 bg-indigo-600 text-white rounded-lg font-bold text-sm shadow-lg hover:bg-indigo-700 active:scale-95 transition-all">REGISTRAR CAMBIOS</button>
+                    </div>
+                </div>
+            </div>
+
         </main>
     </div>
     <div id="story-modal" class="fixed inset-0 z-[100] hidden bg-gray-900/60 backdrop-blur-sm flex items-center justify-center p-4 transition-opacity">
@@ -946,12 +954,14 @@
             </div>
         </div>
     </div>
+
     <button onclick="abrirFormularioFeedback()" class="fixed bottom-6 right-6 z-[90] bg-[#B53D75] text-white p-4 rounded-full shadow-2xl hover:bg-[#8e2d5a] transition-all transform hover:scale-105 flex items-center justify-center group focus:outline-none focus:ring-4 focus:ring-pink-300">
         <i class="fa-solid fa-lightbulb text-2xl animate-pulse group-hover:animate-none"></i>
         <span class="max-w-0 overflow-hidden whitespace-nowrap group-hover:max-w-xs transition-all duration-300 ease-in-out text-sm font-bold pl-0 group-hover:pl-3">
             Dejar un comentario
         </span>
     </button>
+<script src="salvia_esquema.js"></script>
 <script src="salvia_app.js"></script>
 </body>
 </html>
