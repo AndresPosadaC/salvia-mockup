@@ -60,33 +60,52 @@ const dicPreguntas = {
     
     // DIVIPOLA: Departamentos de Colombia
     "P1_003": { label: "Departamento (DIVIPOLA)", type: "select", options: ["Seleccione...", "ANTIOQUIA", "ATLÁNTICO", "BOGOTÁ, D.C.", "BOLÍVAR", "BOYACÁ", "CALDAS", "CAQUETÁ", "CAUCA", "CESAR", "CÓRDOBA", "CUNDINAMARCA", "CHOCÓ", "HUILA", "LA GUAJIRA", "MAGDALENA", "META", "NARIÑO", "NORTE DE SANTANDER", "QUINDÍO", "RISARALDA", "SANTANDER", "SUCRE", "TOLIMA", "VALLE DEL CAUCA", "ARAUCA", "CASANARE", "PUTUMAYO", "ARCHIPIÉLAGO DE SAN ANDRÉS", "AMAZONAS", "GUAINÍA", "GUAVIARE", "VAUPÉS", "VICHADA"], colSpan: 2 },
-    "P1_004": { label: "Municipio (Código o Nombre)", type: "text", placeholder: "Ej: 05001 MEDELLÍN", colSpan: 2 }
+    "P1_004": { label: "Municipio (Código o Nombre)", type: "text", placeholder: "Ej: 05001 MEDELLÍN", colSpan: 2 },
+
+    // --- SECCIÓN 5: TAMIZAJE DE RIESGO LÍNEA 155 (Extraído de Vue.js) ---
+    "S_008": { label: "Tamizaje Rápido de Riesgo (Exclusivo Funcionario)", type: "section", icon: "fa-clipboard-list", colSpan: 4 },
+    "TR_001": { label: "¿El agresor tiene armas o fácil acceso a ellas?", type: "boolean", colSpan: 2 },
+    "TR_002": { label: "¿La víctima ha manifestado pensamientos de autolesión?", type: "boolean", colSpan: 2 },
+    "TR_003": { label: "¿Ha sufrido violencia física o sexual anteriormente?", type: "boolean", colSpan: 2 },
+    "TR_004": { label: "¿El agresor ha amenazado con atentar contra su vida?", type: "boolean", colSpan: 2 },
+    
+    // NODO HIJO: Solo aparece si hay amenaza de muerte (Riesgo Alto)
+    "TR_005": { label: "⚠️ ALERTA: ¿El agresor ha amenazado a familiares o cercanos?", type: "boolean", colSpan: 2 },
+    
+    "TR_006": { label: "¿Comparten espacios comunes (vivienda, trabajo, estudio)?", type: "boolean", colSpan: 2 },
+    "TR_007": { label: "¿Existe una relación de jerarquía o subordinación?", type: "boolean", colSpan: 2 },
+    
+    // NODO HIJO: Solo aparece si hay jerarquía (Riesgo Medio/Alto)
+    "TR_008": { label: "⚠️ ALERTA: ¿El agresor usó su posición de autoridad para agredirla?", type: "boolean", colSpan: 2 }
 };
 
 const arbolRelaciones = {
-    // Las Raíces (Nodos Nivel 1) siempre visibles
+    // Agregamos la Sección 5 y las preguntas principales a las raíces
     "raices_tamizaje": [
         "S_004", "G1_001", "G1_002", "G1_003", "G1_004", 
         "G1_005", "G1_006", "G1_007", "G1_008", 
         "G1_009", "G1_010", "G1_011", "G1_012", "G1_013", "G1_014", "G1_015", "G1_016", "G1_017", "G1_018", "G1_019", "G1_020",
         "S_005", "A1_001", "A1_002", "V1_013",
         "S_006", "V1_014", "V1_015", "H1_001", "H1_002", "H1_003", "H1_004",
-        "S_007", "P1_001", "P1_002", "P1_003", "P1_004"
+        "S_007", "P1_001", "P1_002", "P1_003", "P1_004",
+        // NUEVAS RAÍCES DEL TAMIZAJE FUNCIONARIO
+        "S_008", "TR_001", "TR_002", "TR_003", "TR_004", "TR_006", "TR_007"
     ],
     
-    // REGLAS CONDICIONALES EN CASCADA (DAG)
+    // Reglas en Cascada (Las que ya teníamos)
     "G1_009": { "Otra": ["G2_009_A"] },
-    "G1_011": { "Otra ¿Cuál?": ["G2_011_A"] },
+    "G1_011": { "Otra ¿Cuál?": ["G2_011_A"] }, // Ajustado para que coincida exactamente con las opciones
     "G1_012": { "Otro": ["G2_012_A"] },
     "V1_013": { "Otro": ["V2_013_A"] },
-    
-    // Si reportó previamente, preguntamos a qué entidad
     "H1_002": { "true": ["H2_002_A"] },
-    
-    // REGLAS DE RIESGO IDENTIFICADAS
-    // Si está en estado de gestación, alertamos y pedimos los meses
     "G1_020": { "true": ["G2_020_A"] },
+    "P1_001": { "Medidas de emergencia": ["P2_001_A"] },
 
-    // Si el Plan de Acción es una Medida de Emergencia, pedimos especificar
-    "P1_001": { "Medidas de emergencia": ["P2_001_A"] }
+    // NUEVAS REGLAS DEL TAMIZAJE (La magia que pediste)
+    "TR_004": { 
+        "true": ["TR_005"] // Si hay amenaza de muerte, se despliega la pregunta sobre la familia
+    },
+    "TR_007": { 
+        "true": ["TR_008"] // Si hay jerarquía, se despliega la pregunta de abuso de autoridad
+    }
 };
