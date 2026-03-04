@@ -48,7 +48,7 @@
                     <img src="assets/img/header_govco.png" alt="GOV.CO" class="h-6 md:h-8 object-contain">
                 </div>
                 <div>
-                    <img src="assets/img/kreivo_icon.png" alt="KREIVO" class="h-12 md:h-20 object-contain mr-2">
+                    <h1>KREIVO</h1>
                 </div>
                 <nav class="hidden md:flex space-x-6 text-sm font-medium">
                     <a href="#" class="hover:text-gray-200 transition-colors">Transparencia</a>
@@ -107,7 +107,6 @@
                         <span class="font-bold text-sm tracking-wider">SALVIA</span>
                     </div>
                     <span class="bg-white text-[#24A0B0] text-[10px] font-black px-2 py-0.5 rounded-full shadow-inner flex items-center"> 
-                        versión 2.4
                         <button onclick="abrirModalHistoria('versiones')" class="ml-2 text-gray-400 hover:text-[#24A0B0] transition-colors" title="Ver Historia de Usuario">
                             <i class="fa-solid fa-circle-info text-sm"></i>
                         </button>
@@ -203,91 +202,25 @@
                             <strong>Orientación:</strong> Por favor complete la información. El campo de teléfono es obligatorio.
                         </p>
                         
-                        <form id="form-reporte" onsubmit="enviarReporte(event)" class="space-y-6">
+                        <form id="form-reporte" onsubmit="enviarReporte(event)">
                             
-                            <div class="client-section-header">
-                                <i class="fa-solid fa-users"></i><h2>Datos Personales</h2>
-                            </div>
+                            <div id="eav-public-container"></div>
 
-                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                                
-                                <div class="group relative md:col-span-2 lg:col-span-1">
-                                    <label class="client-input-label">Nombres</label>
-                                    <input type="text" class="client-input-field" placeholder="Escriba el nombre completo">
+                            <div id="campos-credenciales" class="hidden mt-8 bg-purple-50 p-6 rounded-xl border border-purple-200">
+                                <h3 class="font-bold text-[#380E44] mb-4 border-b border-purple-200 pb-2">
+                                    <i class="fa-solid fa-key mr-2"></i> Crear Credenciales de Acceso
+                                </h3>
+                                <p class="text-xs text-purple-800 mb-4">Estos datos le permitirán ingresar a futuro para hacer seguimiento a su caso.</p>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div>
+                                        <label class="block text-sm font-bold text-gray-700 mb-1">Crear Usuario</label>
+                                        <input type="text" class="client-input-field" placeholder="Ejemplo: maria.perez26">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-bold text-gray-700 mb-1">Contraseña segura</label>
+                                        <input type="password" class="client-input-field" placeholder="••••••••">
+                                    </div>
                                 </div>
-
-                                <div class="group relative md:col-span-2 lg:col-span-1">
-                                    <label class="client-input-label">Apellidos</label>
-                                    <input type="text" class="client-input-field" placeholder="Escriba sus apellidos">
-                                </div>
-
-                                <div class="group relative md:col-span-2 lg:col-span-1">
-                                    <label class="client-input-label">Nombre identitario</label>
-                                    <input type="text" class="client-input-field" placeholder="Su apodo, si usa uno">
-                                </div>
-
-                                <div class="md:col-span-2 lg:col-span-1">
-                                    <label class="client-input-label">Fecha de nacimiento</label>
-                                    <input type="date" class="client-input-field">
-                                </div>
-
-                                <div class="md:col-span-2">
-                                    <label class="client-input-label">Tipo de documento</label>
-                                    <select class="client-input-field">
-                                        <option value="">Seleccione...</option>
-                                        <option>CC - Cédula de ciudadanía</option>
-                                        <option>TI - Tarjeta de Identidad</option>
-                                        <option>CE - Cédula de extranjería</option>
-                                    </select>
-                                </div>
-
-                                <div class="group relative md:col-span-2">
-                                    <label class="client-input-label">Número de documento</label>
-                                    <input type="text" inputmode="numeric" class="numpad-trigger client-input-field bg-gray-50 cursor-pointer" placeholder="Sin puntos ni espacios">
-                                </div>
-
-                                <div class="group relative md:col-span-2 lg:col-span-4">
-                                    <label class="client-input-label">Dirección</label>
-                                    <input type="text" class="client-input-field" placeholder="Escriba su dirección">
-                                </div>
-
-                                <div class="group relative md:col-span-2 lg:col-span-4">
-                                    <label class="client-input-label">Número de teléfono <span class="text-red-500">*</span></label>
-                                    <input type="text" id="reporte-tel" inputmode="numeric" required class="numpad-trigger client-input-field bg-gray-50 cursor-pointer border-purple-300 shadow-sm" placeholder="Ejemplo: 300 123 45 67">
-                                </div>
-
-                                <div class="md:col-span-2">
-                                    <label class="client-input-label">Identidad de Género</label>
-                                    <select class="client-input-field">
-                                        <option value="">Seleccione...</option><option>Mujer</option><option>Hombre</option><option>Personas Trans (Transgénero)</option>
-                                    </select>
-                                </div>
-
-                                <div class="md:col-span-2">
-                                    <label class="client-input-label">Orientación sexual</label>
-                                    <select class="client-input-field">
-                                        <option value="">Seleccione...</option><option>Heterosexual</option><option>Lesbiana</option><option>Gay</option><option>Bisexual</option>
-                                    </select>
-                                </div>
-
-                                <div class="md:col-span-2 lg:col-span-1">
-                                    <label class="client-input-label">Departamento</label>
-                                    <select class="client-input-field"><option value="">Seleccione...</option><option>Bogotá, D.C.</option><option>Bolívar</option><option>Antioquia</option></select>
-                                </div>
-
-                                <div class="md:col-span-2 lg:col-span-3">
-                                    <label class="client-input-label">Ciudad / Municipio</label>
-                                    <input type="text" class="client-input-field">
-                                </div>
-                            </div>
-                            
-                            <div class="client-section-header mt-8">
-                                <i class="fa-solid fa-file-lines"></i><h2>Descripción de los hechos</h2>
-                            </div>
-
-                            <div class="mt-2 group relative">
-                                <label class="client-input-label">Detalle de lo ocurrido</label>
-                                <textarea rows="4" class="client-input-field" placeholder="Describa brevemente la situación..."></textarea>
                             </div>
 
                             <div class="flex flex-col sm:flex-row items-center sm:space-x-4 pt-6 mt-6 border-t border-gray-200">

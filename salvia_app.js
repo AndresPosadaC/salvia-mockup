@@ -417,7 +417,7 @@ const userStories = {
         role: 'Equipo Desarrollador', 
         content: `
             <div class="bg-blue-50 p-4 rounded-lg border border-blue-100 mt-2">
-                <h4 class="font-bold text-[#B53D75] mb-3">Versión 3.1 (3/3/2026)</h4>
+                <h4 class="font-bold text-[#B53D75] mb-3">Versión 3.2 (4/3/2026)</h4>
                 <ul class="space-y-3">
                     <li class="flex items-start">
                         <span class="bg-[#B53D75] text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold mr-3 shrink-0 mt-0.5">1</span> 
@@ -442,6 +442,10 @@ const userStories = {
                     <li class="flex items-start">
                         <span class="bg-[#B53D75] text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold mr-3 shrink-0 mt-0.5">6</span> 
                         <span>Front similar al original</span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="bg-[#B53D75] text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold mr-3 shrink-0 mt-0.5">6</span> 
+                        <span>Interactividad y relacionamiento de preguntas, esquema de la base de datos optimizada</span>
                     </li>
                 </ul>
             </div>
@@ -580,69 +584,73 @@ function abrirFormularioFeedback() {
 }
 
 // ==========================================
-// 12. MOTOR EAV AVANZADO (GRAFO ACÍCLICO DIRIGIDO - DAG)
+// 12. MOTOR EAV AVANZADO (GRAFO ACÍCLICO DIRIGIDO - DAG) UNIVERSAL
 // ==========================================
 
-function renderizarFormularioDinamico() {
-    const contenedor = document.getElementById('dynamic-form-preview');
+// Ahora recibe el ID del contenedor como parámetro
+function renderizarFormularioDinamico(containerId) {
+    const contenedor = document.getElementById(containerId);
     if (!contenedor) return;
     
-    // Configuramos el Grid responsivo
-    contenedor.className = "grid grid-cols-1 md:grid-cols-4 gap-x-4 gap-y-5 pb-10";
+    contenedor.className = "grid grid-cols-1 md:grid-cols-4 gap-x-4 gap-y-5 pb-6";
     contenedor.innerHTML = ''; 
     
-    // 1. Dibujar TODAS las preguntas del diccionario (Ocultas por defecto)
     Object.keys(dicPreguntas).forEach(codigo => {
         const campo = dicPreguntas[codigo];
-        
         const div = document.createElement('div');
-        div.id = `wrapper_${codigo}`;
-        div.className = "slide-in hidden"; // Oculto al nacer
+        // El ID del HTML ahora lleva el nombre del contenedor para evitar colisiones
+        div.id = `wrapper_${containerId}_${codigo}`;
+        div.className = "slide-in hidden"; 
         
         const colSpanClass = campo.colSpan === 4 ? 'md:col-span-4' : campo.colSpan === 2 ? 'md:col-span-2' : 'md:col-span-1';
         div.classList.add(colSpanClass);
 
-        const label = `<label class="client-input-label">${campo.label}</label>`;
-        const inputClass = "client-input-field";
         let inputHTML = '';
+        if (campo.type === 'section') {
+            div.className = "col-span-1 md:col-span-4 client-section-header mt-6";
+            div.innerHTML = `<i class="fa-solid ${campo.icon}"></i><h2>${campo.label}</h2>`;
+        } else {
+            const label = `<label class="client-input-label">${campo.label}</label>`;
+            const inputClass = "client-input-field bg-white";
+            
+            // Inyectamos el evento onchange pasando el containerId
+            const onchangeStr = `evaluarDAG('${containerId}')`;
 
-        if (campo.type === 'text' || campo.type === 'number') {
-            inputHTML = `<input type="${campo.type}" id="${codigo}" class="${inputClass}" onchange="evaluarDAG()">`;
-        } else if (campo.type === 'textarea') {
-            inputHTML = `<textarea id="${codigo}" rows="3" class="${inputClass}" onchange="evaluarDAG()"></textarea>`;
-        } else if (campo.type === 'boolean') {
-            // El usuario ve "Sí/No", pero el sistema lee "true/false" o ""
-            inputHTML = `
-                <select id="${codigo}" onchange="evaluarDAG()" class="${inputClass}">
-                    <option value="">Seleccione...</option>
-                    <option value="true">Sí</option>
-                    <option value="false">No</option>
+            if (campo.type === 'text' || campo.type === 'number' || campo.type === 'date') {
+                inputHTML = `<input type="${campo.type}" id="${containerId}_${codigo}" class="${inputClass}" onchange="${onchangeStr}">`;
+            } else if (campo.type === 'textarea') {
+                inputHTML = `<textarea id="${containerId}_${codigo}" rows="3" class="${inputClass}" onchange="${onchangeStr}"></textarea>`;
+            } else if (campo.type === 'boolean') {
+                inputHTML = `<select id="${containerId}_${codigo}" onchange="${onchangeStr}" class="${inputClass}">
+                    <option value="">Seleccione...</option><option value="true">Sí</option><option value="false">No</option>
                 </select>`;
+            } else if (campo.type === 'select') {
+                let optionsHTML = campo.options.map(opt => `<option value="${opt}">${opt}</option>`).join('');
+                inputHTML = `<select id="${containerId}_${codigo}" onchange="${onchangeStr}" class="${inputClass}">${optionsHTML}</select>`;
+            }
+            div.innerHTML = label + inputHTML;
         }
-        
-        div.innerHTML = label + inputHTML;
         contenedor.appendChild(div);
     });
 
-    const btnContainer = document.createElement('div');
-    btnContainer.className = "col-span-1 md:col-span-4 flex justify-center mt-6";
-    btnContainer.innerHTML = `<button type="button" class="client-btn-success shadow-md text-sm py-3 px-10">Guardar y Continuar</button>`;
-    contenedor.appendChild(btnContainer);
+    // Solo actualizamos el cuadro negro de JSON si estamos en el Constructor
+    if (containerId === 'dynamic-form-preview') {
+        const btnContainer = document.createElement('div');
+        btnContainer.className = "col-span-1 md:col-span-4 flex justify-center mt-6 border-t pt-4";
+        btnContainer.innerHTML = `<button type="button" class="client-btn-success shadow-md text-sm py-3 px-10">Guardar y Continuar</button>`;
+        contenedor.appendChild(btnContainer);
 
-    // Mostramos el código DAG en el panel negro para el Superusuario
-    const vistaCodigo = `// DICCIONARIO\n${JSON.stringify(dicPreguntas, null, 2)}\n\n// ÁRBOL DAG\n${JSON.stringify(arbolRelaciones, null, 2)}`;
-    const previewBox = document.getElementById('json-preview');
-    if(previewBox) previewBox.innerText = vistaCodigo;
+        const vistaCodigo = `// DICCIONARIO\n${JSON.stringify(dicPreguntas, null, 2)}\n\n// ÁRBOL DAG\n${JSON.stringify(arbolRelaciones, null, 2)}`;
+        const previewBox = document.getElementById('json-preview');
+        if(previewBox) previewBox.innerText = vistaCodigo;
+    }
     
-    // Arrancar el motor evaluando las raíces
-    evaluarDAG();
+    evaluarDAG(containerId);
 }
 
-// EL ALGORITMO RECURSIVO DEL GRAFO (Traverse)
-function evaluarDAG() {
+function evaluarDAG(containerId) {
     let nodosVisibles = new Set();
-
-    // Las raíces siempre están visibles
+    
     if(arbolRelaciones["raices_tamizaje"]) {
         arbolRelaciones["raices_tamizaje"].forEach(codigo => nodosVisibles.add(codigo));
     }
@@ -651,7 +659,7 @@ function evaluarDAG() {
     
     while(cola.length > 0) {
         let codigoActual = cola.shift();
-        const inputActual = document.getElementById(codigoActual);
+        const inputActual = document.getElementById(`${containerId}_${codigoActual}`);
         
         if (arbolRelaciones[codigoActual] && inputActual) {
             const valorActual = inputActual.value; 
@@ -660,24 +668,16 @@ function evaluarDAG() {
                 let hijosAAgregar = arbolRelaciones[codigoActual][valorActual];
                 
                 hijosAAgregar.forEach(hijo => {
-                    let nivelPadre = parseInt(codigoActual.substring(1,2));
-                    let nivelHijo = parseInt(hijo.substring(1,2));
-                    
-                    if (nivelHijo <= nivelPadre && codigoActual[0] === hijo[0]) {
-                        console.error(`🚨 ALERTA DE LOOP BLOQUEADO: El nodo ${codigoActual} intentó llamar a un nivel igual o inferior (${hijo}).`);
-                    } else {
-                        nodosVisibles.add(hijo);
-                        cola.push(hijo); 
-                    }
+                    nodosVisibles.add(hijo);
+                    cola.push(hijo); 
                 });
             }
         }
     }
 
-    // Actualizar la Interfaz Gráfica (DOM)
     Object.keys(dicPreguntas).forEach(codigo => {
-        const wrapper = document.getElementById(`wrapper_${codigo}`);
-        const input = document.getElementById(codigo);
+        const wrapper = document.getElementById(`wrapper_${containerId}_${codigo}`);
+        const input = document.getElementById(`${containerId}_${codigo}`);
         
         if (wrapper && input) {
             if (nodosVisibles.has(codigo)) {
@@ -687,6 +687,9 @@ function evaluarDAG() {
                 if(input.tagName === 'SELECT') input.selectedIndex = 0;
                 else input.value = '';
             }
+        } else if (wrapper && dicPreguntas[codigo].type === 'section') {
+            if (nodosVisibles.has(codigo)) wrapper.classList.remove('hidden');
+            else wrapper.classList.add('hidden');
         }
     });
 }
@@ -696,14 +699,15 @@ function agregarCampoPrueba() {
 }
 
 // ==========================================
-// INICIALIZADOR GENERAL UNIFICADO
+// INICIALIZADOR GENERAL
 // ==========================================
 document.addEventListener('DOMContentLoaded', () => {
-    // Estas funciones ya las tienes definidas arriba en el archivo
     if(typeof navPublic === 'function') navPublic('home-view');
     if(typeof cargarCacheAlInicio === 'function') cargarCacheAlInicio(); 
     if(typeof generarCaptchas === 'function') generarCaptchas();
     
-    // Iniciar Motor DAG
-    renderizarFormularioDinamico();
+    // ¡AQUÍ ESTÁ LA MAGIA! Ejecutamos el motor en AMBOS lados al mismo tiempo
+    renderizarFormularioDinamico('eav-public-container'); // Para la vista pública
+    renderizarFormularioDinamico('dynamic-form-preview'); // Para el Constructor EAV
 });
+
